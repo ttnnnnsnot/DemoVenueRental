@@ -1,38 +1,63 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+﻿<div class="container-fluid p-0 position-relative index-banner">
+    <div id="backgroundImgChange">
+        <div class="position-absolute index-banner-img"
+             v-for="(item, index) in bannerimg"
+             :key="index"
+             :style="getImageStyle(item)"
+             :class="{'fade-in': index === currentIndex}"></div>
+    </div>
+    
+    <div class="container-fluid h-100 index-banner-content">
+        <div class="row row-cols-1 h-100">
+            <div class="col text-center text-light align-content-center">
+                <h1 class="">Demo Venue Rental</h1>
+                <h3 class="">Test Rental</h3>
+            </div>
+            <div class="col align-content-center">
+                <div class="row justify-content-center">
+                    <div class="col-4 col-sm-3 col-lg-2">
+                        <div class="dropdown w-100">
+                            <button class="btn btn-secondary dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div>
+                                    <i class="fa-solid fa-medal"></i>
+                                    <span class="ps-2 pe-2">運動項目</span>
+                                </div>
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item">羽球</a></li>
+                                <li><a class="dropdown-item">籃球</a></li>
+                                <li><a class="dropdown-item">桌球</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-4 col-sm-3 col-lg-2">
+                        <div class="dropdown w-100">
+                            <button class="btn btn-secondary dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div>
+                                    <i class="fa-solid fa-map-pin"></i>
+                                    <span class="ps-2 pe-2">選擇地區</span>
+                                </div>
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton2">
+                                <li><a class="dropdown-item">新北市</a></li>
+                                <li><a class="dropdown-item">台北市</a></li>
+                                <li><a class="dropdown-item">桃園市</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-4 col-sm-3 col-lg-2">
+                        <button type="button" class="btn btn-danger w-100">找尋場所</button>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>    
 </div>
 
 @section Scripts {
-    <script>
-        const backgroundImgChange = Vue.createApp({
-            data() {
-                return {
-                    bannerimg: ['../img/1.jpg', '../img/2.jpg'],
-                    currentIndex: 0,
-                }
-            },
-            mounted() {
-                this.startImageSwitching();
-            },
-            methods: {
-                startImageSwitching() {
-                    setInterval(() => {
-                        this.currentIndex = (this.currentIndex + 1) % this.bannerimg.length;
-                    }, 5000); // 每秒切换一次
-                },
-                getImageStyle(image) {
-                    return {
-                        backgroundImage: `url(${image})`,
-                    };
-                },
-            },
-        });
-
-        backgroundImgChange.mount("#backgroundImgChange");
-    </script>
+    <script src="~/js/indexbanner.js" asp-append-version="true"></script>
 }
+
+
+
+
