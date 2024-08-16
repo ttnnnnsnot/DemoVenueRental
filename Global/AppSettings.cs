@@ -1,4 +1,4 @@
-﻿namespace WebMVC2.Global
+﻿namespace DemoVenueRental.Global
 {
     public static class AppSettings
     {

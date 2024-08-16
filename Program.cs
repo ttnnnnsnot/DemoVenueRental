@@ -3,9 +3,16 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using WebMVC2.Global;
+using DemoVenueRental.Global;
+using Microsoft.AspNetCore.Diagnostics;
+using Newtonsoft.Json;
+using System.Net;
+using DemoVenueRental.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// 註冊服務
+builder.Services.AddControllers();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -71,13 +78,40 @@ builder.Services.AddControllersWithViews(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+app.UseExceptionHandler(config =>
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+    config.Run(async context =>
+    {
+        var exception = context.Features.Get<IExceptionHandlerFeature>();
+        if (exception != null)
+        {
+            if (context.Request.Path.StartsWithSegments("/api"))
+            {
+                // 專門處理 API 請求的錯誤
+                await ExceptionHandler.res(context);
+            }
+            else
+            {
+                // 處理非 API 請求的錯誤，例如重定向到錯誤頁面
+                context.Response.Redirect("/Home/Error");
+            }
+        }
+    });
+});
+
+// 處理 404 錯誤
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 404)
+    {
+        await ExceptionHandler.res(context, "路徑錯誤");
+    }
+});
+
+
+app.UseHsts(); // 在生產環境中啟用 HSTS
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

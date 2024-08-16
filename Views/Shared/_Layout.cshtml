@@ -4,54 +4,78 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - DemoVenueRental</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="~/lib/fontawesome-free-6.6.0-web/css/all.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/DemoVenueRental.styles.css" asp-append-version="true" />
+    
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/fontawesome-free-6.6.0-web/css/all.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+        <script src="~/js/callapi.js" asp-append-version="true"></script>
+    </environment>
+
+    <environment include="Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link href="~/lib/fontawesome-free-6.6.0-web/css/all.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+
+        <script src="~/js/callapi.js" asp-append-version="true"></script>
+    </environment>
+
 </head>
 <body>
-    <div id="app">
-        <header class="fixed-top" style="height:60px;">
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
-                <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DemoVenueRental</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse">
-                        <ul class="navbar-nav flex-grow-1 text-center">
-                            <li class="nav-item ms-sm-auto me-5">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">找場地</a>
-                            </li>
-                            <li class="nav-item me-5">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">成為場地主</a>
-                            </li>
-                            <li class="nav-item me-5">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Regist">註冊</a>
-                            </li>
-                            <li class="nav-item me-5">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">登入</a>
-                            </li>
-                        </ul>
-                    </div>
+    <header class="fixed-top" style="height:60px;">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DemoVenueRental</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav flex-grow-1 text-center">
+                        <li class="nav-item ms-sm-auto me-5">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">找場地</a>
+                        </li>
+                        <li class="nav-item me-5">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">成為場地主</a>
+                        </li>
+                        <li class="nav-item me-5">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Regist">註冊</a>
+                        </li>
+                        <li class="nav-item me-5">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">登入</a>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-        </header>
-        <main role="main" class="w-100">
-            @RenderBody()
-        </main>
-        <footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; @DateTime.Now.Year.ToString() - DemoVenueRental - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
-        </footer>
-    </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/vue@3"></script>
-    <script src="~/lib/fontawesome-free-6.6.0-web/js/all.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+        </nav>
+    </header>
+    <main role="main" class="w-100">
+        @RenderBody()
+    </main>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; @DateTime.Now.Year.ToString() - DemoVenueRental - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="~/lib/fontawesome-free-6.6.0-web/js/all.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.37/vue.global.min.js"></script>
+
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+
+    <environment names="Production">
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/lib/fontawesome-free-6.6.0-web/js/all.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.37/vue.global.prod.min.js"></script>
+
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

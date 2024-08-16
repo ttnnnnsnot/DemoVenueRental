@@ -1,6 +1,85 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿<div id="id2">
+    <div v-show="!isDataLoaded">Loading...</div>
+    <index-select-type v-show="isDataLoaded" v-on:data-loaded="fnHandleDataLoaded"></index-select-type>
+</div>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<script type="text/x-template" id="indexSelectType">
+    <div class="dropdown w-100">
+        <button class="btn btn-secondary dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <div>
+                <i :class="dataObject.iconClass"></i>
+                <span class="ps-2 pe-2">{{ dataObject.defaultText }}</span>
+            </div>
+        </button>
+        <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton1">
+            <li v-for="item in dataObject.listItem" :key="item">
+                <a class="dropdown-item" v-on:click="fnChangeText(item)">{{ item }}</a>
+            </li>
+        </ul>
+    </div>
+</script>
+
+@section Scripts{
+
+    <script>
+        const indexSelectTypeOption = {
+            template: '#indexSelectType',
+            emits: ['data-loaded'],
+            setup(props, { emit }) {
+                const dataObject = reactive({
+                    iconClass: "",
+                    defaultText: "",
+                    listItem: []
+                });
+
+                const fetchData = async () => {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve({
+                                iconClass: "fa-solid fa-medal",
+                                defaultText: "運動項目",
+                                listItem: ["羽球", "籃球", "桌球"]
+                            });
+                        }, 5000);
+                    });
+                };
+
+                const fnChangeText = (text) => {
+                    dataObject.defaultText = text;
+                };
+
+                onMounted(async () => {
+                    const data = await fetchData();
+                    Object.assign(dataObject, data);
+                    emit('data-loaded');
+                });
+
+                return {
+                    dataObject,
+                    fnChangeText
+                };
+            }
+        };
+
+        const indexSelectCreateApp = {
+            setup() {
+                const isDataLoaded = ref(false);
+
+                const fnHandleDataLoaded = () => {
+                    isDataLoaded.value = true;
+                };
+
+                return {
+                    isDataLoaded,
+                    fnHandleDataLoaded
+                };
+            }
+        };
+
+        const app = createApp(indexSelectCreateApp);
+        app.component('index-select-type', indexSelectTypeOption);
+        app.mount("#app");
+    </script>
+}
+
+
