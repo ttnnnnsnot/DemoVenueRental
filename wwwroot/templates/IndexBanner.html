@@ -1,0 +1,5 @@
+﻿<div v-for="(item, index) in bannerimg"
+     :key="index"
+     :style="setImageStyle(item)"
+     :class="{'fade-in': index === currentIndex}"
+     class="position-absolute index-banner-img"></div>

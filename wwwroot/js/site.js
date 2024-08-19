@@ -6,5 +6,6 @@ const {
     ref,
     createApp,
     reactive,
-    onMounted
+    onMounted,
+    defineAsyncComponent
 } = Vue;

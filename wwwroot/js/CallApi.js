@@ -6,6 +6,14 @@
     return `${protocol}//${host}${port}/${controll}/`;
 }
 
+async function loadTemplate(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.text();
+}
+
 function fetchWithParams(url, params, method = 'GET', headers = {}) {
     return new Promise(async (resolve, reject) => {
         try {

@@ -6,19 +6,16 @@
     <div class="container-fluid h-100 index-banner-content">
         <div class="row row-cols-1 h-100">
             <div class="col text-center text-light align-content-center">
-                <h1 class="">Demo Venue Rental</h1>
-                <h3 class="">Test Rental</h3>
+                <h1 class="animate__animated animate__backInLeft">Demo Venue Rental</h1>
+                <h3 class="animate__animated animate__backInRight">Test Rental</h3>
             </div>
             <div class="col align-content-center">
                 <div class="row justify-content-center">
-                    <div class="col-4 col-sm-3 col-lg-2" id="sportType">
-                        <index-select-type :select-type="data1" v-on:data-change="fnChangeText"></index-select-type>
+                    <div v-for="(item, index) in selectTypes" :key="index" class="col-4 col-sm-3 col-lg-2 animate__animated animate__fadeInDown">
+                        <index-select-type :select-type="item.data" v-on:data-change="(text) => fnChangeText(index, text)"></index-select-type>
                     </div>
-                    <div class="col-4 col-sm-3 col-lg-2" id="areaType">
-                        <index-select-type :select-type="data1" v-on:data-change="fnChangeText"></index-select-type>
-                    </div>
-                    <div class="col-4 col-sm-3 col-lg-2">                        
-                        <button type="button" class="btn btn-danger w-100">找尋場所</button>
+                    <div class="col-4 col-sm-3 col-lg-2 animate__animated animate__fadeInDown">                        
+                        <button type="button" class="btn btn-danger w-100" v-on:click="search">找尋場所</button>
                     </div>
                 </div>                
             </div>
@@ -26,85 +23,61 @@
     </div>    
 </div>
 
-<script type="text/x-template" id="indexSelectType">
-    <div class="dropdown w-100">
-        <button class="btn btn-secondary dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <div>
-                <i :class="selectType.iconClass"></i>
-                <span class="ps-2 pe-2">{{ selectType.defaultText }}</span>
-            </div>
-        </button>
-        <ul class="dropdown-menu w-100">
-            <li v-for="item in selectType.listItem" :key="item">
-                <a class="dropdown-item" v-on:click="fnChangeText(item)">{{ item }}</a>
-            </li>
-        </ul>
-    </div>
-</script>
-
 @section Scripts{
-    <partial name="_IndexBanner" />
+    <script src="components/IndexBanner.js" asp-append-version="true"></script>
+    <script src="components/IndexSelectType.js" asp-append-version="true"></script>
 
     <script>
-
-        const indexSelectTypeOption = {
-            template: '#indexSelectType',
-            emits: ['data-change'],
-            props: ['selectType'],
-            setup(props, { emit }) {
-
-                const fnChangeText = (text) => {
-                    emit('data-change', text);
-                };
-
-                return {
-                    fnChangeText
-                };
-            }
-        };
-
-        const indexSelectCreateApp = (dataFetchFunction) => {
-            return {
-                components: {
-                    'index-select-type': indexSelectTypeOption
-                },
-                setup() {
-
-                    const data1 = reactive({});
-
-                    const fnChangeText = (text) => {
-                        data1.defaultText = text;
-                    }
-
-                    onMounted(async () => {
-                        try {
-                            const res = await dataFetchFunction();
-                            if (res.state) {
-                                Object.assign(data1, res.data);
-                            }
-                        } catch (err) {
-                            throw new Error(`HTTP error! status: ${err}`);
-                        }
-                    });
-
-                    return {
-                        fnChangeText,
-                        data1
-                    }
-
-                }
-            }                    
-        };
-
         const fetchData1 = () => fetchWithParams('def/1');
         const fetchData2 = () => fetchWithParams('def/2');
 
-        const sportType = createApp(indexSelectCreateApp(fetchData1));
-        sportType.mount("#sportType");
+        const searchInputOption = (selectTypes) => {
+            const search = () => {
+                    const results = selectTypes.map(type => {
+                        const isSelected = type.data.listItem.includes(type.data.defaultText);
+                        return isSelected ? type.data.defaultText : '未選擇';
+                    });
+                    console.log(`Results: ${results.join(', ')}`);
+            }
 
-        const areaType = createApp(indexSelectCreateApp(fetchData2));
-        areaType.mount("#areaType");
+            return {
+                search
+            }
+        }
 
+        const appOption = {
+            components: {
+                'index-select-type': indexSelectTypeOption,
+                'index-banner': indexBannerOption
+            },
+            setup() {
+                
+                const {
+                    selectTypes,
+                    fnChangeText,
+                    onMounted
+                } = indexSelectMore([fetchData1, fetchData2]);
+                
+                const {
+                    search
+                } = searchInputOption(selectTypes);
+
+
+                onMounted(async () => {
+                    await onMounted();
+                });
+
+                return {
+                    fnChangeText,
+                    selectTypes,
+                    search
+                }
+            }
+        };
+
+        const app = createApp(appOption);
+
+        app.mount("#app");
     </script>
 }
 
