@@ -41,6 +41,9 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+node_modules/
+
+
 # user files
 /wwwroot/userfiles/*
 /logs/*
