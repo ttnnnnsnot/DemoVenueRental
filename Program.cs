@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using DemoVenueRental.Global;
 using Microsoft.AspNetCore.Diagnostics;
-using Newtonsoft.Json;
-using System.Net;
-using DemoVenueRental.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +75,7 @@ builder.Services.AddControllersWithViews(options =>
 
 var app = builder.Build();
 
+// 建立API的錯誤處理回應
 app.UseExceptionHandler(config =>
 {
     config.Run(async context =>
@@ -99,19 +97,10 @@ app.UseExceptionHandler(config =>
     });
 });
 
-// 處理 404 錯誤
-app.Use(async (context, next) =>
+if (!app.Environment.IsDevelopment())
 {
-    await next();
-
-    if (context.Response.StatusCode == 404)
-    {
-        await ExceptionHandler.res(context, "路徑錯誤");
-    }
-});
-
-
-app.UseHsts(); // 在生產環境中啟用 HSTS
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
