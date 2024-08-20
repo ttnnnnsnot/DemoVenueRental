@@ -5,7 +5,7 @@
         public static IConfiguration Configuration { get; set; } =
             new ConfigurationBuilder().Build();
         public static string MsSqlConnect =>
-            Configuration["MsSqlConnect"] ?? "http://127.0.0.1:5000/execute";
+            Configuration["MsSqlConnect"] ?? "";
 
         public static string CookieKey => Configuration["CookieKey"] ?? @"D:\Web\WebKey\DemoVenueRental";
 

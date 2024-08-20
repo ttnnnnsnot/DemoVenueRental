@@ -9,3 +9,7 @@ const {
     onMounted,
     defineAsyncComponent
 } = Vue;
+
+const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0;
+};

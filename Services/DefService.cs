@@ -1,20 +1,34 @@
 ﻿using DemoVenueRental.Global;
 using DemoVenueRental.Models;
+using DemoVenueRental.Sql;
 
 namespace DemoVenueRental.Services
 {
     public class DefService
     {
-        public string GetDef(int id)
+        private DefData _defData = new DefData();
+        public string GetDef(string typeName)
         {
             var resultData = new ResultData<SelectType>();
             var def = new SelectType();
+            def.listItem = _defData.GetSelectData(typeName);
 
-            if (id != 1)
+            if (def.listItem.Count == 0)
+            {
+                resultData.state = false;
+                resultData.errorMsg = "查無資料";
+                return resultData.ToJson();
+            }
+
+            if (typeName == "sport")
+            {
+                def.defaultText = "選擇項目";
+                def.iconClass = "fa-solid fa-medal";
+            }
+            else
             {
                 def.defaultText = "選擇地區";
                 def.iconClass = "fa-solid fa-map-pin";
-                def.listItem = ["新北市", "台北市", "桃園市"];
             }
 
             resultData.data = def;

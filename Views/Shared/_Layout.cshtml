@@ -8,7 +8,10 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/fontawesome-free-6.6.0-web/css/all.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
         <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
         <script src="~/js/callapi.js" asp-append-version="true"></script>
     </environment>
@@ -17,8 +20,10 @@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/lib/fontawesome-free-6.6.0-web/css/all.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         <script src="~/js/callapi.js" asp-append-version="true"></script>
     </environment>
 
@@ -28,7 +33,7 @@
         <header class="fixed-top" style="height:60px;">
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DemoVenueRental</a>
+                    <a class="navbar-brand animate__animated animate__flipInX animate__delay-1s" asp-area="" asp-controller="Home" asp-action="Index">Demo Venue Rental</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -42,10 +47,10 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">成為場地主</a>
                             </li>
                             <li class="nav-item me-5">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Regist">註冊</a>
+                                <a href="#" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#registModal">註冊</a>
                             </li>
                             <li class="nav-item me-5">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">登入</a>
+                                <a href="#" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#loginModal">登入</a>
                             </li>
                         </ul>
                     </div>
@@ -60,6 +65,10 @@
                 &copy; @DateTime.Now.Year.ToString() - DemoVenueRental - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
         </footer>
+
+        <div id="hideModal">
+            <partial name="_LoginPartial" />
+        </div>
     </div>
     
     <environment names="Development">
@@ -67,6 +76,10 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="~/lib/fontawesome-free-6.6.0-web/js/all.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.37/vue.global.min.js"></script>
+
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
@@ -77,9 +90,14 @@
         <script src="~/lib/fontawesome-free-6.6.0-web/js/all.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.37/vue.global.prod.min.js"></script>
 
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

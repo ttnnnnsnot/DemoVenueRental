@@ -28,16 +28,70 @@
     <script src="components/IndexSelectType.js" asp-append-version="true"></script>
 
     <script>
-        const fetchData1 = () => fetchWithParams('def/1');
-        const fetchData2 = () => fetchWithParams('def/2');
+
+        // $.validator.unobtrusive.options = {
+        //     invalidHandler: function (event, validator) {
+        //         // 在整個表單驗證失敗時觸發其他動作
+        //     },
+        // };
+
+        const loginOption = () => {
+            const Email = ref('');
+            const PasswordHash = ref('');
+
+            const login = async (event) => {
+                event.preventDefault();
+
+                if (!$("#registModalForm").valid())
+                    return;
+                
+                const data = JSON.stringify({
+                    Email: Email.value,
+                    PasswordHash: PasswordHash.value
+                });
+
+                try {
+                    const results = await fetchWithParams("Login", data, "POST");
+                    console.log(results);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            return {
+                login,
+                Email,
+                PasswordHash
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const fetchData1 = () => fetchWithParams('def/sport');
+        const fetchData2 = () => fetchWithParams('def/area');
 
         const searchInputOption = (selectTypes) => {
             const search = () => {
-                    const results = selectTypes.map(type => {
-                        const isSelected = type.data.listItem.includes(type.data.defaultText);
-                        return isSelected ? type.data.defaultText : '未選擇';
-                    });
-                    console.log(`Results: ${results.join(', ')}`);
+                const results = selectTypes.map(type => {
+
+                    if (isEmptyObject(type.data))
+                        return '';
+
+                    const selectedItem = type.data.listItem.find(item => item.name === type.data.defaultText);
+                    return selectedItem ? selectedItem : '';
+                });
+
+                console.log(`Results: ${results.map(item => item ? item.name : '').join(', ')}`);
             }
 
             return {
@@ -62,6 +116,11 @@
                     search
                 } = searchInputOption(selectTypes);
 
+                const {
+                    login,
+                    Email,
+                    PasswordHash
+                } = loginOption();
 
                 onMounted(async () => {
                     await onMounted();
@@ -70,7 +129,10 @@
                 return {
                     fnChangeText,
                     selectTypes,
-                    search
+                    search,
+                    login,
+                    Email,
+                    PasswordHash
                 }
             }
         };

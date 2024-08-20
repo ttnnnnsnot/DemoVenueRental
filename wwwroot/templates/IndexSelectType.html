@@ -6,8 +6,8 @@
         </div>
     </button>
     <ul class="dropdown-menu w-100">
-        <li v-for="item in selectType.listItem" :key="item">
-            <a class="dropdown-item" v-bind:class="{ active: item === selectType.defaultText }"  v-on:click="fnChangeText(item)">{{ item }}</a>
+        <li v-for="item in selectType.listItem" :key="item.selectTypeId">
+            <a class="dropdown-item" v-bind:class="{ active: item.name === selectType.defaultText }"  v-on:click="fnChangeText(item)">{{ item.name }}</a>
         </li>
     </ul>
 </div>

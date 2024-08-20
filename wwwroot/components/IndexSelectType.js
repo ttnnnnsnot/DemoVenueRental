@@ -3,7 +3,9 @@ props
 selectType = {
     iconClass:'',   //圖標class
     defaultText:'', //預設文字
-    listItem:[]     //選項
+    listItem:[
+        {[selectTypeID], [name]}
+    ]     //選項
 }
 */
 
@@ -14,8 +16,8 @@ const indexSelectTypeOption = defineAsyncComponent(async () => {
         emits: ['data-change'],
         props: ['selectType'],
         setup(props, { emit }) {
-            const fnChangeText = (text) => {
-                emit('data-change', text);
+            const fnChangeText = (item) => {
+                emit('data-change', item.name);
             };
             return {
                 fnChangeText

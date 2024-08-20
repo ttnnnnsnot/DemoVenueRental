@@ -1,6 +1,4 @@
-﻿using DemoVenueRental.Global;
-using DemoVenueRental.Models;
-using DemoVenueRental.Services;
+﻿using DemoVenueRental.Services;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -25,13 +23,13 @@ namespace DemoVenueRental.Controllers.Api
             return new string[] { "Value1", "Value2", "Value3" };
         }
 
-        // GET api/<DefController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/<DefController>/typeName
+        [HttpGet("{typeName}")]
+        public string Get(string typeName)
         {
             try
             {
-                return _defService.GetDef(id);
+                return _defService.GetDef(typeName);
             }
             catch(Exception ex)
             {

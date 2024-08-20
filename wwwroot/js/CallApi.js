@@ -14,7 +14,7 @@ async function loadTemplate(url) {
     return await response.text();
 }
 
-function fetchWithParams(url, params, method = 'GET', headers = {}) {
+function fetchWithParams(url, params, method = 'GET', headers = { 'Content-Type': 'application/json' }) {
     return new Promise(async (resolve, reject) => {
         try {
             let urlfull = GetUrl() + url;
@@ -27,12 +27,9 @@ function fetchWithParams(url, params, method = 'GET', headers = {}) {
                 // 將參數轉換成 URL 的查詢字串
                 urlfull += '?' + new URLSearchParams(params).toString();
             } else {
-                // 構建 FormData 用於傳送檔案和其他資料
-                const formData = new FormData();
-                for (const key in params) {
-                    formData.append(key, params[key]);
-                }
-                options.body = formData;
+                const token = $('input[name="AntiforgeryToken"]').val();
+                options.headers["X-CSRF-TOKEN"] = token;
+                options.body = params;
             }
             
             const response = await fetch(urlfull, options);
