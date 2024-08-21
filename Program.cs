@@ -18,7 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-});
+}).AddSessionStateTempDataProvider();
 
 // 設定 Configuration
 AppSettings.Configuration = builder.Configuration;
@@ -48,7 +48,6 @@ builder.Services.AddDataProtection()
 
 // 設定session
 builder.Services.AddRazorPages().AddSessionStateTempDataProvider();
-builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 builder.Services.AddSession();
 
 // 設置cookies登入驗証
@@ -84,7 +83,7 @@ app.UseExceptionHandler(config =>
                 // 專門處理 API 請求的錯誤
                 await ExceptionHandler.res(context);
             }
-            else
+            else if (!context.Request.Path.StartsWithSegments("/Home/Error"))
             {
                 // 處理非 API 請求的錯誤，例如重定向到錯誤頁面
                 context.Response.Redirect("/Home/Error");

@@ -4,7 +4,7 @@ using DemoVenueRental.Sql;
 
 namespace DemoVenueRental.Services
 {
-    public class DefService
+    public class DefService : BaseService
     {
         private DefData _defData = new DefData();
         public string GetDef(string typeName)
@@ -34,13 +34,6 @@ namespace DemoVenueRental.Services
             resultData.data = def;
             resultData.state = true;
             return resultData.ToJson();
-        }
-
-        public string HandleError(string errorMessage, Exception ex)
-        {
-            LoggerService.LogError(errorMessage, ex);
-            var errorResult = new ResultData<object> { state = false, errorMsg = errorMessage };
-            return errorResult.ToJson();
         }
     }
 }

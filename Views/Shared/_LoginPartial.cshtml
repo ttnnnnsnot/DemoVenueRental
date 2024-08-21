@@ -1,7 +1,10 @@
 ﻿@model DemoVenueRental.Models.Login
-<form id="registModalForm" method="post">
+@{
+    ViewData.TemplateInfo.HtmlFieldPrefix = "Login";
+}
+<form id="loginModalForm" method="post">
     @Html.AntiForgeryToken()
-    <div class="modal fade" id="registModal" aria-hidden="true" tabindex="-1">
+    <div class="modal fade" id="loginModal" aria-hidden="true" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -10,18 +13,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        <div class="row row-cols-1">
+                        <div class="row row-cols-1 gy-4">
                             <div class="col">
-                                <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" v-model="Email" placeholder="name@example.com" asp-for="Email">
-                                    <label for="Email">Email address</label>
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" v-model="Email" placeholder="name@example.com" asp-for="Email" autocomplete="email">
+                                    <label asp-for="Email">Email address</label>
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-floating">
-                                    <input type="password" class="form-control" v-model="PasswordHash" placeholder="Enter Password" asp-for="PasswordHash">
-                                    <label for="PasswordHash">Enter Password</label>
+                                    <input type="password" class="form-control" v-model="PasswordHash" placeholder="Enter Password" asp-for="PasswordHash" autocomplete="current-password">
+                                    <label asp-for="PasswordHash">Enter Password</label>
                                     <span asp-validation-for="PasswordHash" class="text-danger"></span>
                                 </div>
                             </div>
@@ -29,7 +32,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" v-on:click="login">登入</button>
+                    <button type="button" class="btn btn-primary" v-on:click="Login">登入</button>
                 </div>
             </div>
         </div>

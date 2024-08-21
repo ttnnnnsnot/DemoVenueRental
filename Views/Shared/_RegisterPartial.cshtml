@@ -1,0 +1,72 @@
+﻿@model DemoVenueRental.Models.Register
+@{
+    ViewData.TemplateInfo.HtmlFieldPrefix = "Register";
+}
+<form id="registerModalForm" method="post">
+    @Html.AntiForgeryToken()
+    <div class="modal fade" id="registerModal" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">登入</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row row-cols-1 gy-4">
+                            <div class="col">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" v-model="rEmail" placeholder="name@example.com" asp-for="Email" autocomplete="email">
+                                    <label asp-for="Email">Email address</label>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" v-model="rPasswordHash" placeholder="Enter Password" asp-for="PasswordHash" autocomplete="current-password">
+                                    <label asp-for="PasswordHash">Enter Password</label>
+                                    <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" placeholder="Enter ConfirmPassword" asp-for="ConfirmPasswordHash" autocomplete="current-password">
+                                    <label asp-for="ConfirmPasswordHash">Enter ConfirmPassword</label>
+                                    <span asp-validation-for="ConfirmPasswordHash" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">      
+                                <div class="row">
+                                    <div class="col-md">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" v-model="rLastName" placeholder="姓" asp-for="LastName" autocomplete="family-name">
+                                            <label asp-for="LastName">姓</label>
+                                            <span asp-validation-for="LastName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" v-model="rName" placeholder="姓名" asp-for="Name" autocomplete="given-name" autocomplete="tel">
+                                            <label asp-for="Name">姓名</label>
+                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" v-model="rPhone" placeholder="Enter Phone" asp-for="Phone">
+                                    <label asp-for="Phone">Enter Phone</label>
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" v-on:click="Register">註冊</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

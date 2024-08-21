@@ -7,9 +7,8 @@ const {
     createApp,
     reactive,
     onMounted,
-    defineAsyncComponent
+    defineAsyncComponent,
+    onBeforeMount
 } = Vue;
 
-const isEmptyObject = (obj) => {
-    return Object.keys(obj).length === 0;
-};
+
