@@ -1,19 +1,31 @@
 ﻿using Dapper;
 using DemoVenueRental.Global;
 using DemoVenueRental.Models;
+using System.Data;
 
 namespace DemoVenueRental.Sql
 {
     public class DefData
     {
-        public List<SelectData> GetSelectData(string typeName)
-        {
-            using (var conn = Connection.MsSql()) 
-            {
-                var sql = @"SELECT selectTypeId,name FROM SelectType WHERE typeName = @typeName Order by sort";
+        private readonly IDbConnection _connection;
 
-                return conn.Query<SelectData>(sql, new { typeName = new DbString { Value = typeName, IsFixedLength = false, Length = 10, IsAnsi = true } }).ToList();
-            }
+        public DefData(IDbConnection connection)
+        {
+            _connection = connection;
+        }
+
+        public async Task<List<SelectData>> GetSelectData(string typeName)
+        {
+            var sql = @"SELECT selectTypeId,name 
+                            FROM SelectType 
+                        WHERE typeName = @typeName Order by sort";
+
+            var param = new
+            {
+                typeName = DapperExtension.ToNVarchar(typeName, 10)
+            };
+
+            return (await _connection.QueryAsync<SelectData>(sql, param)).ToList();
         }
     }
 }

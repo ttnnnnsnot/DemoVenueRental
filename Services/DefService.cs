@@ -1,17 +1,24 @@
 ﻿using DemoVenueRental.Global;
 using DemoVenueRental.Models;
 using DemoVenueRental.Sql;
+using System.Data;
 
 namespace DemoVenueRental.Services
 {
     public class DefService : BaseService
     {
-        private DefData _defData = new DefData();
-        public string GetDef(string typeName)
+        private DefData _defData;
+
+        public DefService(IDbConnection connection) : base(connection)
+        {
+            _defData = new DefData(connection);
+        }
+
+        public async Task<string> GetDef(string typeName)
         {
             var resultData = new ResultData<SelectType>();
             var def = new SelectType();
-            def.listItem = _defData.GetSelectData(typeName);
+            def.listItem = await _defData.GetSelectData(typeName);
 
             if (def.listItem.Count == 0)
             {

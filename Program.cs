@@ -5,11 +5,20 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using DemoVenueRental.Global;
 using Microsoft.AspNetCore.Diagnostics;
+using System.Data.SqlClient;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 註冊服務
 builder.Services.AddControllers();
+// 註冊 IDbConnection 服務
+builder.Services.AddScoped<IDbConnection>(sp =>
+{
+    var connection = new SqlConnection(AppSettings.MsSqlConnect);
+    connection.Open();  // 在此處開啟連線
+    return connection;
+});
 
 // 全域設定
 //使用 AutoValidateAntiforgeryToken 屬性，而非廣泛套用 ValidateAntiForgeryToken 屬性，然後用 IgnoreAntiforgeryToken 屬性將其覆寫。 此屬性的運作方式與 ValidateAntiForgeryToken 屬性相同，不同之處在於它在處理使用下列 HTTP 方法提出的要求時不需要權杖：GET、HEAD、OPTIONS、TRACE
@@ -47,7 +56,6 @@ builder.Services.AddDataProtection()
 
 
 // 設定session
-builder.Services.AddRazorPages().AddSessionStateTempDataProvider();
 builder.Services.AddSession();
 
 // 設置cookies登入驗証
@@ -97,13 +105,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// 設置session
+app.UseSession();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-// 設置session
-app.UseSession();
 
 // 設置cookies登入驗証
 app.UseCookiePolicy();

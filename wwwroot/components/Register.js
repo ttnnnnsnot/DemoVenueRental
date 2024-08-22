@@ -1,39 +1,50 @@
-﻿const Email = ref(null);
-const PasswordHash = ref(null);
-const LastName = ref(null);
-const Name = ref(null);
-const Phone = ref(null);
+﻿const registerOption = defineAsyncComponent(async () => {
+    return {
+        template: await loadTemplate("Template/_Register"),
+        setup() {
+            const email = ref('');
+            const passwordHash = ref('');
+            const lastName = ref('');
+            const name = ref('');
+            const phone = ref('');
 
-const Register = async (event) => {
-    event.preventDefault();
+            const showModel = async () => {                
+                $("#registerModal").modal("show");
+                $.validator.unobtrusive.parse($("#registerModal"));
+            }
 
-    if (!$("#registerModalForm").valid())
-        return;
+            const register = async () => {
+                if (!$("#registerModalForm").valid())
+                    return;
 
-    const data = {
-        Email: Email.value,
-        PasswordHash: PasswordHash.value,
-        LastName: LastName.value,
-        Name: Name.value,
-        Phone: Phone.value
-    };
+                const data = {
+                    Email: email.value,
+                    PasswordHash: passwordHash.value,
+                    ConfirmPasswordHash: passwordHash.value,
+                    LastName: lastName.value,
+                    Name: name.value,
+                    Phone: phone.value
+                };
 
-    try {
-        const results = await fetchWithParams("User/Register", data, "POST");
-        console.log(results);
-    } catch (error) {
-        console.error('Error:', error);
+                try {
+                    const results = await fetchWithParams("User/Register", data, "POST");
+                    console.log(results);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
+
+            return {
+                email,
+                passwordHash,
+                lastName,
+                name,
+                phone,
+                register,
+                showModel
+            };
+        }
     }
-}
+});
 
-export default {
-    Email,
-    PasswordHash,
-    LastName,
-    Name,
-    Phone,
-    Register
-}
-
-
-
+export default registerOption;

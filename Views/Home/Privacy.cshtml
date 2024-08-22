@@ -1,30 +1,53 @@
-﻿<div id="app">
-    <div v-if="show">
-        <template v-if="isLoggedIn">
-            <p>Welcome back, user!</p>
-        </template>
-        <template v-else>
-            <p>Please log in.</p>
-        </template>
-    </div>
+﻿<div id="app1">
+    <register-option ref="testmodel"></register-option>
+    <button type="button" v-on:click="onpageshow">show</button>
 </div>
 
 @section Scripts {
-
     <script>
-        const app = Vue.createApp({
-            data() {
-                return {
-                    show: true,
-                    isLoggedIn: false
-                };
+
+        const registerOption1 = defineAsyncComponent(async () => {
+            //const template = await loadTemplate('/Template/_Test');
+            return {
+                template: await loadTemplate('/Template/_Test'),
+                setup() {
+                    const aaaa = ref('213123123');
+
+                    const onpageshow = () => {
+                        console.log('ssssss');
+                        $("#exampleModal1").modal("show");
+                    }
+
+                    return {
+                        aaaa,
+                        onpageshow
+                    }
+                }
             }
         });
 
-        var myapp = app.mount('#app');
-        myapp.isLoggedIn = true;
+        const app1 = createApp({
+            components: {
+                        'register-option': registerOption1,
+            },
+            setup() {
+
+                const testmodel = ref(null);
+
+                const onpageshow = () => {
+                    console.log('onpageshow');
+                    if(testmodel.value != null){
+                        testmodel.value.onpageshow();
+                    }
+                }
+
+                return {
+                    testmodel,
+                    onpageshow
+                }
+            }
+        });
+
+        app1.mount('#app1');
     </script>
 }
-
-
-

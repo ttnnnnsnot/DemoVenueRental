@@ -51,25 +51,5 @@ namespace DemoVenueRental.Models
     public class Users
     {
         public int UserId { get; set; }
-        public string PasswordHash { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-    }
-
-    public class UserLogins
-    {
-        public int UserLoginId { get; set; }
-        public int UserId { get; set; }
-        public byte LoginTypeId { get; set; }
-        public string ProviderUserId { get; set; } = string.Empty;
-    }
-
-    public class UserEmails
-    {
-        public int UserEmailId { get; set; }
-        public int UserId { get; set; }
-        public string Email { get; set; } = string.Empty;
-        public int LoginTypeId { get; set; }
     }
 }

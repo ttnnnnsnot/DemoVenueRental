@@ -8,7 +8,8 @@ const {
     reactive,
     onMounted,
     defineAsyncComponent,
-    onBeforeMount
+    onBeforeMount,
+    nextTick
 } = Vue;
 
 

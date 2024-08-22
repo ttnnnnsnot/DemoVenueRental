@@ -1,5 +1,6 @@
 ﻿using DemoVenueRental.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -7,14 +8,15 @@ namespace DemoVenueRental.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DefController : ControllerBase
+    public class DefController : BaseController
     {
         private DefService _defService;
 
-        public DefController()
+        public DefController(IDbConnection connection) : base(connection)
         {
-            _defService = new DefService();
+            _defService = new DefService(connection);
         }
+
 
         // GET: api/<DefController>
         [HttpGet]
@@ -25,15 +27,15 @@ namespace DemoVenueRental.Controllers.Api
 
         // GET api/<DefController>/typeName
         [HttpGet("{typeName}")]
-        public string Get(string typeName)
+        public async Task<string> Get(string typeName)
         {
             try
             {
-                return _defService.GetDef(typeName);
+                return await _defService.GetDef(typeName);
             }
             catch(Exception ex)
             {
-                return _defService.HandleError("取得資訊錯誤!", ex);
+                return HandleError("取得資訊錯誤!", ex);
             }
         }
 

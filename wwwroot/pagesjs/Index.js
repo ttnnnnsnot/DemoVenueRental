@@ -1,9 +1,11 @@
 ﻿import searchFunction from '../components/IndexSearch.js';
+import registerOption from '../components/Register.js';
 
 const appOption = {
     components: {
         'index-select-type': indexSelectTypeOption,
-        'index-banner': indexBannerOption
+        'index-banner': indexBannerOption,
+        'register': registerOption
     },
     setup() {
 
@@ -18,31 +20,21 @@ const appOption = {
 
         const search = () => searchFunction.search(selectTypes);
 
-        // 使用 ref 來存儲異步加載的模塊
+        const registerComponent = ref(null);
+        const showRegisterModal = () => {
+            console.log(registerComponent.value);
+            if (registerComponent.value) {
+                registerComponent.value.showModel();
+            }
+        };
+
         const Login = ref(null);
         const Email = ref(null);
         const PasswordHash = ref(null);
-
-        const rEmail = ref(null);
-        const rPasswordHash = ref(null);
-        const rLastName = ref(null);
-        const rName = ref(null);
-        const rPhone = ref(null);
-        const Register = ref(null);
-
+     
         onMounted(async () => {
             const { default: loginModule } = await import('../components/Login.js');
-            const { default: registerModule } = await import('../components/Register.js');
-
             Login.value = () => loginModule.Login(Email, PasswordHash);
-
-            rEmail.value = registerModule.Email.value;
-            rPasswordHash.value = registerModule.PasswordHash.value;
-            rLastName.value = registerModule.LastName.value;
-            rName.value = registerModule.Name.value;
-            rPhone.value = registerModule.Phone.value;
-            Register.value = registerModule.Register;
-
             await indexSelectMoreOnMounted();
         });
 
@@ -53,13 +45,8 @@ const appOption = {
             Login,
             Email,
             PasswordHash,
-
-            rEmail,
-            rPasswordHash,
-            rLastName,
-            rName,
-            rPhone,
-            Register
+            showRegisterModal,
+            registerComponent
         }
     }
 };

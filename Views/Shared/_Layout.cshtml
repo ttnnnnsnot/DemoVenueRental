@@ -47,7 +47,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">成為場地主</a>
                             </li>
                             <li class="nav-item me-5">
-                                <a href="#" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#registerModal">註冊</a>
+                                <a href="#" class="nav-link text-dark" v-on:click="showRegisterModal">註冊</a>
                             </li>
                             <li class="nav-item me-5">
                                 <a href="#" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#loginModal">登入</a>
@@ -67,8 +67,7 @@
         </footer>
 
         <div id="hideModal">
-            <partial name="_LoginPartial" />
-            <partial name="_RegisterPartial" />
+            <register ref="registerComponent"></register>
         </div>
     </div>
     
