@@ -1,17 +1,26 @@
 ﻿using Dapper;
+using DemoVenueRental.Extensions;
 using DemoVenueRental.Global;
 using DemoVenueRental.Models;
 using System.Data;
 
 namespace DemoVenueRental.Sql
 {
+    public interface IUserData
+    {
+        Task<ResultData<int>> Register(Register model);
+        Task<ResultData<int>> Login(Login model);
+        Task<bool> IsEmailExist(string Email);
+    }
+
     public class UserLoginResult
     {
+        public int UserId { get; set; }
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
     }
 
-    public class UserData
+    public class UserData : IUserData
     {
         private readonly IDbConnection _connection;
         public UserData(IDbConnection connection)
@@ -24,7 +33,7 @@ namespace DemoVenueRental.Sql
             ResultData<int> result = new ResultData<int>();
 
             // 使用 BCrypt 加密密碼
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.PasswordHash);
+            string hashedPassword = model.PasswordHash.ToHash();
           
             if(await IsEmailExist(model.Email))
             {
@@ -44,11 +53,11 @@ namespace DemoVenueRental.Sql
 
                     var param = new
                     {
-                        Email = DapperExtension.ToNVarchar(model.Email, 100),
-                        PasswordHash = DapperExtension.ToChar(hashedPassword, 60),
-                        LastName = DapperExtension.ToNVarchar(model.LastName, 30),
-                        Name = DapperExtension.ToNVarchar(model.Name, 30),
-                        Phone = DapperExtension.ToChar(model.Phone, 10),
+                        Email = model.Email.ToNVarchar(100),
+                        PasswordHash = hashedPassword.ToChar(60),
+                        LastName = model.LastName.ToNVarchar(30),
+                        Name = model.Name.ToNVarchar(30),
+                        Phone = model.Phone.ToChar(10),
                     };
 
                     var userId = await _connection.ExecuteScalarAsync<int>(sql, param, transaction);
@@ -73,7 +82,45 @@ namespace DemoVenueRental.Sql
                     LoggerService.LogError("註冊失敗", ex);
                     return result;
                 }
+                finally
+                {
+                    transaction.Dispose();
+                }
             }
+        }
+
+        public async Task<ResultData<int>> Login(Login model)
+        {
+            ResultData<int> result = new ResultData<int>();
+
+            var sql = @"
+                SELECT UserId, Email, PasswordHash
+                FROM Users
+                WHERE Email = @Email
+            ";
+
+            var param = new
+            {
+                Email = model.Email.ToNVarchar(100)
+            };
+
+            var user = await _connection.QueryFirstOrDefaultAsync<UserLoginResult>(sql, param);
+
+            if (user == null)
+            {
+                result.errorMsg = "Email不存在";
+                return result;
+            }
+
+            if (!user.PasswordHash.ToVerify(model.PasswordHash))
+            {
+                result.errorMsg = "密碼錯誤";
+                return result;
+            }
+
+            result.state = true;
+            result.data = user.UserId;
+            return result;
         }
 
         public async Task<bool> IsEmailExist(string Email)
@@ -86,7 +133,7 @@ namespace DemoVenueRental.Sql
 
             var param = new
             {
-                Email = DapperExtension.ToNVarchar(Email,100)
+                Email = Email.ToNVarchar(100)
             };
             return await _connection.ExecuteScalarAsync<int>(sql, param) > 0;
         }

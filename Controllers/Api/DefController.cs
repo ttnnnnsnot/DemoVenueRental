@@ -10,13 +10,11 @@ namespace DemoVenueRental.Controllers.Api
     [ApiController]
     public class DefController : BaseController
     {
-        private DefService _defService;
-
-        public DefController(IDbConnection connection) : base(connection)
+        private readonly IDefService _defService;
+        public DefController(IDefService defService)
         {
-            _defService = new DefService(connection);
+            _defService = defService;
         }
-
 
         // GET: api/<DefController>
         [HttpGet]

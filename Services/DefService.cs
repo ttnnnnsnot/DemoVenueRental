@@ -1,17 +1,21 @@
-﻿using DemoVenueRental.Global;
+﻿using DemoVenueRental.Extensions;
 using DemoVenueRental.Models;
 using DemoVenueRental.Sql;
-using System.Data;
 
 namespace DemoVenueRental.Services
 {
-    public class DefService : BaseService
+    public interface IDefService
     {
-        private DefData _defData;
+        Task<string> GetDef(string typeName);
+    }
 
-        public DefService(IDbConnection connection) : base(connection)
+    public class DefService : BaseService , IDefService
+    {
+        private readonly IDefData _defData;
+
+        public DefService(IDefData defData)
         {
-            _defData = new DefData(connection);
+            _defData = defData;
         }
 
         public async Task<string> GetDef(string typeName)
@@ -24,7 +28,7 @@ namespace DemoVenueRental.Services
             {
                 resultData.state = false;
                 resultData.errorMsg = "查無資料";
-                return resultData.ToJson();
+                return resultData.ToSerialize();
             }
 
             if (typeName == "sport")
@@ -40,7 +44,7 @@ namespace DemoVenueRental.Services
 
             resultData.data = def;
             resultData.state = true;
-            return resultData.ToJson();
+            return resultData.ToSerialize();
         }
     }
 }

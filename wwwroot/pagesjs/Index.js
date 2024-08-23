@@ -1,13 +1,23 @@
-﻿import searchFunction from '../components/IndexSearch.js';
-import registerOption from '../components/Register.js';
+﻿import { useRegister, layoutOption } from '../pagesjs/Layout.js';
+
+import indexBannerOption from '../components/IndexBanner.js';
+import {
+    indexSelectTypeOption,
+    indexSelectMore,
+    search as searchFunction
+} from '../components/IndexSelectType.js';
 
 const appOption = {
     components: {
+        ...layoutOption.components,
         'index-select-type': indexSelectTypeOption,
         'index-banner': indexBannerOption,
-        'register': registerOption
     },
     setup() {
+        const { registerComponent, showRegisterModal,
+            loginComponent, showLoginModal,
+            isLoggedIn, currentState, headerLinks, setShowType,
+            onMounted: headerOnMounted } = useRegister();
 
         const fetchData1 = () => fetchWithParams('def/sport');
         const fetchData2 = () => fetchWithParams('def/area');
@@ -20,33 +30,25 @@ const appOption = {
 
         const search = () => searchFunction.search(selectTypes);
 
-        const registerComponent = ref(null);
-        const showRegisterModal = () => {
-            console.log(registerComponent.value);
-            if (registerComponent.value) {
-                registerComponent.value.showModel();
-            }
-        };
-
-        const Login = ref(null);
-        const Email = ref(null);
-        const PasswordHash = ref(null);
-     
+        const LoggedIn = async () => {
+            isLoggedIn.value = await IsLoggedIn();
+        }
+             
         onMounted(async () => {
-            const { default: loginModule } = await import('../components/Login.js');
-            Login.value = () => loginModule.Login(Email, PasswordHash);
             await indexSelectMoreOnMounted();
+            await headerOnMounted();
         });
 
         return {
+            isLoggedIn, currentState, headerLinks, setShowType,
+            showRegisterModal, registerComponent,
+            loginComponent, showLoginModal,
+
             fnChangeText,
             selectTypes,
             search,
-            Login,
-            Email,
-            PasswordHash,
-            showRegisterModal,
-            registerComponent
+
+            LoggedIn
         }
     }
 };

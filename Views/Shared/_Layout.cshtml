@@ -40,17 +40,20 @@
                     </button>
                     <div class="navbar-collapse collapse">
                         <ul class="navbar-nav flex-grow-1 text-center">
-                            <li class="nav-item ms-sm-auto me-5">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">找場地</a>
+                            <li class="nav-item ms-sm-auto me-5" v-show="headerLinks[0]">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">找場地</a>
                             </li>
-                            <li class="nav-item me-5">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">成為場地主</a>
+                            <li class="nav-item me-5" v-show="headerLinks[1]">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">成為場地主</a>
                             </li>
-                            <li class="nav-item me-5">
+                            <li class="nav-item me-5" v-show="headerLinks[2]">
                                 <a href="#" class="nav-link text-dark" v-on:click="showRegisterModal">註冊</a>
                             </li>
-                            <li class="nav-item me-5">
-                                <a href="#" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#loginModal">登入</a>
+                            <li class="nav-item me-5" v-show="headerLinks[3]">
+                                <a href="#" class="nav-link text-dark" v-on:click="showLoginModal">登入</a>
+                            </li>
+                            <li class="nav-item me-5" v-show="headerLinks[4]">
+                                <a href="#" class="nav-link text-dark">登入</a>
                             </li>
                         </ul>
                     </div>
@@ -67,7 +70,8 @@
         </footer>
 
         <div id="hideModal">
-            <register ref="registerComponent"></register>
+            <register-module ref="registerComponent" v-bind:on-Logged-In="LoggedIn"></register-module>
+            <login-module ref="loginComponent" v-bind:on-Logged-In="LoggedIn"></login-module>
         </div>
     </div>
     

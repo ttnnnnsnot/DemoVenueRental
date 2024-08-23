@@ -3,6 +3,11 @@ const isEmptyObject = (obj) => {
     return Object.keys(obj).length === 0;
 };
 
+// 確認登入狀態
+const IsLoggedIn = () => {
+    return fetchWithParams('User/IsLoggedIn');
+}
+
 // 獲取 API 基本 URL
 const getApiBaseUrl = () => {
     const protocol = location.protocol;

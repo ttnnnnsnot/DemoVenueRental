@@ -1,6 +1,6 @@
 ﻿using Dapper;
 
-namespace DemoVenueRental.Global
+namespace DemoVenueRental.Extensions
 {
     public static class DapperExtension
     {

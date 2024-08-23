@@ -9,10 +9,9 @@ selectType = {
 }
 */
 
-const indexSelectTypeOption = defineAsyncComponent(async () => {
-    const template = await loadTemplate('/templates/indexSelectType.html');
+export const indexSelectTypeOption = defineAsyncComponent(async () => {
     return {
-        template,
+        template: await loadTemplate('/templates/indexSelectType.html'),
         emits: ['data-change'],
         props: ['selectType'],
         setup(props, { emit }) {
@@ -26,32 +25,7 @@ const indexSelectTypeOption = defineAsyncComponent(async () => {
     };
 });
 
-const indexSelectOne = (fetchData) => {
-    const selectType = reactive({});
-
-    const fnChangeText = (text) => {
-        selectType.defaultText = text;
-    };
-
-    const onMounted = async () => {
-        try {
-            const res = await fetchData();
-            if (res.state) {
-                Object.assign(selectType, res.data);
-            }
-        } catch (err) {
-            throw new Error(`HTTP error! status: ${err}`);
-        }
-    }
-
-    return {
-        selectType,
-        fnChangeText,
-        onMounted
-    };
-}
-
-const indexSelectMore = (ArrayFunction) => {
+export const indexSelectMore = (ArrayFunction) => {
     const selectTypes = reactive([]);
 
     for (const fetchData of ArrayFunction) {
@@ -80,4 +54,17 @@ const indexSelectMore = (ArrayFunction) => {
         fnChangeText,
         onMounted
     }
+}
+
+export const search = (selectTypes) => {
+    const results = selectTypes.map(type => {
+
+        if (isEmptyObject(type.data))
+            return '';
+
+        const selectedItem = type.data.listItem.find(item => item.name === type.data.defaultText);
+        return selectedItem ? selectedItem : '';
+    });
+
+    console.log(`Results: ${results.map(item => item ? item.name : '').join(', ')}`);
 }

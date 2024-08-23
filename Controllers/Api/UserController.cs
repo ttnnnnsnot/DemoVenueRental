@@ -1,4 +1,5 @@
-﻿using DemoVenueRental.Models;
+﻿using DemoVenueRental.Extensions;
+using DemoVenueRental.Models;
 using DemoVenueRental.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +9,17 @@ namespace DemoVenueRental.Controllers.Api
     [ApiController]
     public class UserController : BaseController
     {
-        private readonly UserService _userService;
-
-        public UserController(System.Data.IDbConnection connection) : base(connection)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            _userService = new UserService(connection);
+            _userService = userService;
+        }
+
+        // GET: api/<DefController>/IsLogged
+        [HttpGet("IsLoggedIn")]
+        public IActionResult IsLoggedIn()
+        {
+            return Ok(_userService.IsLogged());
         }
 
         // GET: api/<DefController>/CheckEmail
@@ -52,19 +59,35 @@ namespace DemoVenueRental.Controllers.Api
                 }
 
                 var result = await _userService.Register(model);
-                return Ok(result.ToJson());
+                return Ok(result.ToSerialize());
             }
             catch (Exception ex) {
-                HandleErrorRecord("注冊失敗!", ex);
-                return Ok(new ResultData<int>() { errorMsg = "注冊失敗!" });
+                return Ok(HandleError("註冊失敗!", ex));
             }
         }
 
         // POST api/<DefController>/Login
         [HttpPost("Login")]
-        public IActionResult Login([FromBody] Login model)
+        public async Task<IActionResult> Login([FromBody] Login model)
         {
-            return Ok(true);
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var firstError = ModelState.Values.SelectMany(v => v.Errors)
+                                      .Select(e => e.ErrorMessage)
+                                      .FirstOrDefault();
+
+                    return Ok(new ResultData<int>() { errorMsg = firstError ?? "資料有誤" });
+                }
+
+                var result = await _userService.Login(model);
+                return Ok(result.ToSerialize());
+            }
+            catch (Exception ex)
+            {
+                return Ok(HandleError("登入失敗!", ex));
+            }
         }
     }
 }

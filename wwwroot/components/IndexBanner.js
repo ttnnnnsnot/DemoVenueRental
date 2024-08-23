@@ -27,9 +27,8 @@
 };
 
 const indexBannerOption = defineAsyncComponent(async () => {
-    const template = await loadTemplate('/templates/IndexBanner.html');
     return {
-        template,
+        template: await loadTemplate('/templates/IndexBanner.html'),
         setup() {
             const {
                 bannerimg,
@@ -50,3 +49,5 @@ const indexBannerOption = defineAsyncComponent(async () => {
     }
         
 });
+
+export default indexBannerOption;

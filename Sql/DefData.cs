@@ -1,11 +1,16 @@
 ﻿using Dapper;
-using DemoVenueRental.Global;
+using DemoVenueRental.Extensions;
 using DemoVenueRental.Models;
 using System.Data;
 
 namespace DemoVenueRental.Sql
 {
-    public class DefData
+    public interface IDefData
+    {
+        Task<List<SelectData>> GetSelectData(string typeName);
+    }
+
+    public class DefData : IDefData
     {
         private readonly IDbConnection _connection;
 

@@ -4,6 +4,8 @@
     {
         public static IConfiguration Configuration { get; set; } =
             new ConfigurationBuilder().Build();
+
+        public static string Serilog => Configuration["Serilog"] ?? "";
         public static string MsSqlConnect =>
             Configuration["MsSqlConnect"] ?? "";
 

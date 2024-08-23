@@ -2,7 +2,7 @@
 
 namespace DemoVenueRental.Controllers
 {
-    public class TemplateController : Controller
+    public class TemplateController : BaseController
     {
         [HttpGet("Template/{viewName}")]
         public IActionResult GetPartialView(string viewName)

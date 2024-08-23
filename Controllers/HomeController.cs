@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace DemoVenueRental.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
 
         public HomeController()
