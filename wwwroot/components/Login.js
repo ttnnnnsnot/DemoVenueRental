@@ -7,7 +7,7 @@
                 required: true
             }
         },
-        setup() {
+        setup(props) {
             const email = ref('');
             const passwordHash = ref('');
             const errorMsg = ref('');

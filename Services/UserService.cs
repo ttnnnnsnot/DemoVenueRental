@@ -77,7 +77,7 @@ namespace DemoVenueRental.Services
             var authProperties = new AuthenticationProperties
             {
                 IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(5),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(30),
                 IssuedUtc = DateTimeOffset.UtcNow,
             };
 

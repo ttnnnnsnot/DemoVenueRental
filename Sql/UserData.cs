@@ -34,8 +34,8 @@ namespace DemoVenueRental.Sql
 
             // 使用 BCrypt 加密密碼
             string hashedPassword = model.PasswordHash.ToHash();
-          
-            if(await IsEmailExist(model.Email))
+            
+            if (await IsEmailExist(model.Email))
             {
                 result.errorMsg = "Email已存在";
                 return result;
@@ -54,7 +54,7 @@ namespace DemoVenueRental.Sql
                     var param = new
                     {
                         Email = model.Email.ToNVarchar(100),
-                        PasswordHash = hashedPassword.ToChar(60),
+                        PasswordHash = hashedPassword.ToVarchar(80),
                         LastName = model.LastName.ToNVarchar(30),
                         Name = model.Name.ToNVarchar(30),
                         Phone = model.Phone.ToChar(10),
@@ -112,7 +112,7 @@ namespace DemoVenueRental.Sql
                 return result;
             }
 
-            if (!user.PasswordHash.ToVerify(model.PasswordHash))
+            if (!model.PasswordHash.ToVerify(user.PasswordHash))
             {
                 result.errorMsg = "密碼錯誤";
                 return result;
