@@ -22,4 +22,12 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\dist\" />
+  </ItemGroup>
+  
+  <Target Name="BuildFrontend" BeforeTargets="Build">
+    <Exec Command="cd frontend &amp;&amp; npm run build" WorkingDirectory="$(ProjectDir)" />
+  </Target>
+
 </Project>
