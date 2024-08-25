@@ -2,29 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
     <title>@ViewData["Title"] - DemoVenueRental</title>
     
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/fontawesome-free-6.6.0-web/css/all.css" />
+        <!--animate-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css" />
+
+        <!--aos-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
+        <!--jquery-->
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        
+        <!--vue-->
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+        <!--validate-->
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+        <!--bootstrap-->
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+
+        <!--fontawesome-->
+        <link rel="stylesheet" href="~/lib/fontawesome-free-6.6.0-web/css/all.css" />
+        <script src="~/lib/fontawesome-free-6.6.0-web/js/all.js"></script>
+
+        <!--my-->
         <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="~/js/callapi.js" asp-append-version="true"></script>
     </environment>
 
     <environment include="Staging,Production">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/lib/fontawesome-free-6.6.0-web/css/all.min.css" />
+        <!--animate-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
+        <!--aos-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.min.js"></script>
+
+        <!--jquery-->
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+        <!--vue-->
+        <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+        <!--validate-->
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+        <!--bootstrap-->
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+
+        <!--fontawesome-->
+        <link rel="stylesheet" href="~/lib/fontawesome-free-6.6.0-web/css/all.min.css" />
+        <script src="~/lib/fontawesome-free-6.6.0-web/js/all.min.js"></script>
+
+        <!--vuetify-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3.7.0/dist/vuetify.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@3.7.0/dist/vuetify.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@@mdi/font@7.4.47/css/materialdesignicons.min.css" rel="stylesheet">
+
+        <!--my-->
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-        <script src="~/js/callapi.js" asp-append-version="true"></script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/callapi.min.js" asp-append-version="true"></script>
     </environment>
 
 </head>
@@ -52,9 +101,6 @@
                             <li class="nav-item me-5" v-show="headerLinks[3]">
                                 <a href="#" class="nav-link text-dark" v-on:click="showLoginModal">登入</a>
                             </li>
-                            <li class="nav-item me-5" v-show="headerLinks[4]">
-                                <a href="#" class="nav-link text-dark">登入</a>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -76,29 +122,9 @@
     </div>
     
     <environment names="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-        <script src="~/lib/fontawesome-free-6.6.0-web/js/all.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.37/vue.global.min.js"></script>
-
-        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-        <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-
-        <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
 
     <environment names="Production">
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/lib/fontawesome-free-6.6.0-web/js/all.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.37/vue.global.prod.min.js"></script>
-
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
     @await RenderSectionAsync("Scripts", required: false)

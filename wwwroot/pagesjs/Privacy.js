@@ -33,11 +33,13 @@ const appOption = {
         const LoggedIn = async () => {
             isLoggedIn.value = await IsLoggedIn();
         }
-             
+
         onMounted(async () => {
             await indexSelectMoreOnMounted();
             await headerOnMounted();
         });
+
+
 
         return {
             isLoggedIn, currentState, headerLinks, setShowType,
@@ -54,7 +56,5 @@ const appOption = {
 };
 
 const app = createApp(appOption);
-
-app.use(vuetify);
 
 app.mount("#app");

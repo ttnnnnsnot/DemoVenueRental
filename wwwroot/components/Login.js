@@ -1,6 +1,6 @@
 ﻿const loginOption = defineAsyncComponent(async () => {
     return {
-        template: await loadTemplate("Template/_Login"),
+        template: await loadTemplate("/Template/_Login"),
         props: {
             onLoggedIn: {
                 type: Function,

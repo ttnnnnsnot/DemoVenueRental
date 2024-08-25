@@ -1,6 +1,6 @@
 ﻿const registerOption = defineAsyncComponent(async () => {
     return {
-        template: await loadTemplate("Template/_Register"),
+        template: await loadTemplate("/Template/_Register"),
         props: {
             onLoggedIn: {
                 type: Function,
