@@ -101,6 +101,7 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
+    @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

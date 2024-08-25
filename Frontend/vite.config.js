@@ -5,14 +5,19 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
     plugins: [vue()],
     build: {
-        emptyOutDir: true,
         modulePreload: {
             polyfill: false
         },
         outDir: '../wwwroot/dist',
         manifest: true,
         rollupOptions: {
-            input: 'src/main.js',
+            input: {
+                main: 'src/pages/main.js',
+                maintest: 'src/pages/main1.js',
+            }
+        },
+        watch: {
+            include: 'src/**'
         }
     }
 })

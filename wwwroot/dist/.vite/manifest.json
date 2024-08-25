@@ -1,11 +1,28 @@
 {
-  "src/main.js": {
-    "file": "assets/main-BmkBmn9q.js",
+  "_runtime-dom.esm-bundler-Cstyy4Au.js": {
+    "file": "assets/runtime-dom.esm-bundler-Cstyy4Au.js",
+    "name": "runtime-dom.esm-bundler"
+  },
+  "_runtime-dom.esm-bundler-gjvAhaE1.js": {
+    "file": "assets/runtime-dom.esm-bundler-gjvAhaE1.js",
+    "name": "runtime-dom.esm-bundler"
+  },
+  "src/pages/main.js": {
+    "file": "assets/main-DO5FsLc0.js",
     "name": "main",
-    "src": "src/main.js",
+    "src": "src/pages/main.js",
     "isEntry": true,
-    "css": [
-      "assets/main-BJLh6Aef.css"
+    "imports": [
+      "_runtime-dom.esm-bundler-Cstyy4Au.js"
+    ]
+  },
+  "src/pages/main1.js": {
+    "file": "assets/maintest-DphOaK4b.js",
+    "name": "maintest",
+    "src": "src/pages/main1.js",
+    "isEntry": true,
+    "imports": [
+      "_runtime-dom.esm-bundler-Cstyy4Au.js"
     ]
   }
 }

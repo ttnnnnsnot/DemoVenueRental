@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\dist\.vite\manifest.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="bundleconfig.json" />
   </ItemGroup>
 
@@ -20,10 +24,6 @@
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\dist\" />
   </ItemGroup>
   
   <Target Name="BuildFrontend" BeforeTargets="Build">
