@@ -1,16 +1,8 @@
 ﻿import registerOption from '../components/Register.js';
 import loginOption from '../components/Login.js';
-import headerOption from '../components/Header.js';
+import headerTemplate from '../components/Header.js';
 
 export const useRegister = () => {
-
-    const {
-        isLoggedIn,
-        currentState,
-        headerLinks,
-        setShowType,
-        onMounted
-    } = headerOption();
 
     const registerComponent = ref(null);
     const showRegisterModal = () => {
@@ -19,7 +11,6 @@ export const useRegister = () => {
         }
     };
 
-
     const loginComponent = ref(null);
     const showLoginModal = () => {
         if (loginComponent.value) {
@@ -27,24 +18,30 @@ export const useRegister = () => {
         }
     };
 
-    return {
-        isLoggedIn,
-        currentState,
-        headerLinks,
-        setShowType,
-        onMounted,
+    const Logout = async () => {
+        try {
+            return await API.GET('User/Logout');
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
 
+    return {
         registerComponent,
         showRegisterModal,
 
         loginComponent,
-        showLoginModal
+        showLoginModal,
+
+        Logout
     };
 }
 
 export const layoutOption = {
     components: {
         'register-module': registerOption,
-        'login-module': loginOption
+        'login-module': loginOption,
+        'header-module': headerTemplate
     }
 }

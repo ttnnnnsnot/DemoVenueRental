@@ -19,8 +19,8 @@ const appOption = {
             isLoggedIn, currentState, headerLinks, setShowType,
             onMounted: headerOnMounted } = useRegister();
 
-        const fetchData1 = () => fetchWithParams('def/sport');
-        const fetchData2 = () => fetchWithParams('def/area');
+        const fetchData1 = () => CallWithParams('def/sport');
+        const fetchData2 = () => CallWithParams('def/area');
 
         const {
             selectTypes,

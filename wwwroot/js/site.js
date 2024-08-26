@@ -4,8 +4,15 @@
     reactive,
     onMounted,
     defineAsyncComponent,
-    watch
+    watch,
+    provide,
+    inject,
 } = Vue;
 
-const { createVuetify } = Vuetify
-const vuetify = createVuetify()
+// 檢查物件是否為空
+const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0;
+};
+
+//const { createVuetify } = Vuetify
+//const vuetify = createVuetify()

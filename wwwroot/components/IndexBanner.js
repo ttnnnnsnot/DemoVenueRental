@@ -28,7 +28,7 @@
 
 const indexBannerOption = defineAsyncComponent(async () => {
     return {
-        template: await loadTemplate('/templates/IndexBanner.html'),
+        template: await API.GetTemplate('templates/IndexBanner.html'),
         setup() {
             const {
                 bannerimg,

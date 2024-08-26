@@ -15,6 +15,14 @@ namespace DemoVenueRental.Controllers.Api
             _userService = userService;
         }
 
+        // GET: api/<DefController>/Logout
+        [HttpGet("Logout")]
+        public IActionResult Logout()
+        {
+            _userService.Logout();
+            return Ok(true);
+        }
+
         // GET: api/<DefController>/IsLogged
         [HttpGet("IsLoggedIn")]
         public IActionResult IsLoggedIn()

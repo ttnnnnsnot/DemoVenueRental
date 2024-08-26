@@ -1,0 +1,26 @@
+﻿<div class="navbar-collapse collapse justify-content-end">
+    <ul class="navbar-nav text-center">
+        <li class="nav-item ms-sm-3" v-show="headerLinks[0]">
+            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">找場地</a>
+        </li>
+        <li class="nav-item" v-show="headerLinks[1]">
+            <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">成為場地主</a>
+        </li>
+        <li class="nav-item" v-show="headerLinks[2]">
+            <a href="#" class="nav-link text-dark" v-on:click="showRegisterModal">註冊</a>
+        </li>
+        <li class="nav-item" v-show="headerLinks[3]">
+            <a href="#" class="nav-link text-dark" v-on:click="showLoginModal">登入</a>
+        </li>
+        <li class="nav-item">
+            <div class="dropdown">
+                <a class="nav-link dropmove" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-regular fa-circle-user fa-lg"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-sm-end border-0 text-center">
+                    <li><a class="dropdown-item" href="#" v-on:click="Logouted">登出</a></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,6 +1,6 @@
 ﻿const loginOption = defineAsyncComponent(async () => {
     return {
-        template: await loadTemplate("/Template/_Login"),
+        template: await API.GetTemplate("/Template/_Login"),
         props: {
             onLoggedIn: {
                 type: Function,
@@ -34,7 +34,7 @@
                 };
 
                 try {
-                    const results = await fetchWithParams("User/Login", data, "POST");
+                    const results = await API.POST("User/Login", data);
 
                     if (results && results.state) {
                         clear();

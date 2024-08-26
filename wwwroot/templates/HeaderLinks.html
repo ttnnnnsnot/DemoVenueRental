@@ -1,0 +1,21 @@
+﻿<div class="navbar-collapse collapse justify-content-end">
+    <ul class="navbar-nav text-center">
+        <li class="nav-item ms-sm-5" v-for="(items, index) in headerLinks" :key="index" v-show="items.show">
+
+            <a v-if="items.linktype === 'a'"  
+               :class="items.className" 
+               :href="items.link ?? '#'" 
+               v-on:click="items.onclick">{{items.text}}</a>
+
+            <div v-else class="dropdown">
+                <a class="nav-link dropmove" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-regular fa-circle-user fa-lg"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-sm-end border-0 text-center">
+                    <li><a class="dropdown-item" href="#" v-on:click="items.onclick">登出</a></li>
+                </ul>
+            </div>
+
+        </li>
+    </ul>
+</div>

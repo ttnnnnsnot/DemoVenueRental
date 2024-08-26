@@ -7,6 +7,8 @@ import {
     search as searchFunction
 } from '../components/IndexSelectType.js';
 
+
+
 const appOption = {
     components: {
         ...layoutOption.components,
@@ -16,11 +18,12 @@ const appOption = {
     setup() {
         const { registerComponent, showRegisterModal,
             loginComponent, showLoginModal,
-            isLoggedIn, currentState, headerLinks, setShowType,
-            onMounted: headerOnMounted } = useRegister();
+            Logout } = useRegister();
 
-        const fetchData1 = () => fetchWithParams('def/sport');
-        const fetchData2 = () => fetchWithParams('def/area');
+        const isLoggedIn = ref(false);
+
+        const fetchData1 = () => API.GET('def/sport');
+        const fetchData2 = () => API.GET('def/area');
 
         const {
             selectTypes,
@@ -28,7 +31,12 @@ const appOption = {
             onMounted: indexSelectMoreOnMounted
         } = indexSelectMore([fetchData1, fetchData2]);
 
-        const search = () => searchFunction.search(selectTypes);
+        const search = () => searchFunction(selectTypes);
+
+        const Logouted = async () => {
+            await Logout();
+            isLoggedIn.value = await IsLoggedIn();
+        }
 
         const LoggedIn = async () => {
             isLoggedIn.value = await IsLoggedIn();
@@ -36,11 +44,11 @@ const appOption = {
              
         onMounted(async () => {
             await indexSelectMoreOnMounted();
-            await headerOnMounted();
         });
 
+        provide('isLoggedIn', isLoggedIn);
+
         return {
-            isLoggedIn, currentState, headerLinks, setShowType,
             showRegisterModal, registerComponent,
             loginComponent, showLoginModal,
 
@@ -48,13 +56,12 @@ const appOption = {
             selectTypes,
             search,
 
-            LoggedIn
+            LoggedIn,
+            Logouted
         }
     }
 };
 
 const app = createApp(appOption);
-
-app.use(vuetify);
 
 app.mount("#app");

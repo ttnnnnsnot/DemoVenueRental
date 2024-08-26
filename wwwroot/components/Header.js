@@ -1,38 +1,56 @@
-﻿const headerOption = () => {
-    const isLoggedIn = ref(false);
+﻿const headerOption = (ShowRegisterModal, ShowLoginModal, Logouted) => {
+    const isLoggedIn = inject('isLoggedIn');
     const currentState = ref(1); // 初始狀態為state1
-    const headerLinks = reactive([false, false, false, false, false, false, false]);
+    const headerLinks = reactive([
+        {
+            linktype: 'a', text: '找場地', link: `${getBaseUrl()}home/index`, className: 'nav-link text-dark', show: true
+        },
+        {
+            linktype: 'a', text: '成為場地主', link: `${getBaseUrl()}home/test`, className: 'nav-link text-dark', show: true
+        },
+        {
+            linktype: 'a', text: '註冊', className: 'nav-link text-dark', show: true, onclick: ShowRegisterModal
+        },
+        {
+            linktype: 'a', text: '登入', className: 'nav-link text-dark', show: true, onclick: ShowLoginModal
+        },
+        {
+            linktype: 'dropdown', show: false, onclick: Logouted
+        }
+    ]);
 
     const setShowType = (state) => {
         switch (state) {
             case 1:
-                headerLinks[0] = true;
-                headerLinks[1] = true;
-                headerLinks[2] = true;
-                headerLinks[3] = true;
+                headerLinks[0].show = true;
+                headerLinks[1].show = true;
+                headerLinks[2].show = true;
+                headerLinks[3].show = true;
+                headerLinks[4].show = false;
                 break;
             case 2:
-                headerLinks[0] = true;
-                headerLinks[1] = true;
-                headerLinks[2] = false;
-                headerLinks[3] = false;
-                break;
-            case 3:
-                headerLinks[0] = false;
-                headerLinks[1] = false;
-                headerLinks[2] = false;
-                headerLinks[3] = false;
+                headerLinks[0].show = true;
+                headerLinks[1].show = true;
+                headerLinks[2].show = false;
+                headerLinks[3].show = false;
+                headerLinks[4].show = true;
                 break;
             default:
                 // 如果狀態不匹配，則隱藏所有連結
-                headerLinks.fill(false);
+                headerLinks.forEach(item => {
+                    item.show = false;
+                });
                 break;
         }
     };
 
     const onMounted = async () => {
-        isLoggedIn.value = await IsLoggedIn();
-        setShowType(currentState.value);
+        try {
+            isLoggedIn.value = await IsLoggedIn();
+            setShowType(currentState.value);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     // 監聽isLoggedIn的變化
@@ -55,8 +73,41 @@
         currentState,
         headerLinks,
         setShowType,
-        onMounted
+        onMounted,
     };
 };
 
-export default headerOption;
+const headerTemplate = defineAsyncComponent(async () => {
+    return {
+        template: await API.GetTemplate('templates/HeaderLinks.html'),
+        emits: ['show-login', 'show-register', 'logouted'],
+        setup(props, { emit }) {
+
+            const ShowRegisterModal = () => {
+                emit('show-register');
+            };
+
+            const ShowLoginModal = () => {
+                emit('show-login');
+            };
+
+            const Logouted = () => {
+                emit('logouted');
+            }
+
+            const {
+                headerLinks,
+                onMounted: headerOnMounted,
+            } = headerOption(ShowRegisterModal, ShowLoginModal, Logouted);
+
+            onMounted(async () => headerOnMounted());
+
+            return {
+                headerLinks,
+            };
+        }
+    }
+
+});
+
+export default headerTemplate;

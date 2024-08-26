@@ -11,7 +11,7 @@ selectType = {
 
 export const indexSelectTypeOption = defineAsyncComponent(async () => {
     return {
-        template: await loadTemplate('/templates/indexSelectType.html'),
+        template: await API.GetTemplate('/templates/indexSelectType.html'),
         emits: ['data-change'],
         props: ['selectType'],
         setup(props, { emit }) {
@@ -44,7 +44,7 @@ export const indexSelectMore = (ArrayFunction) => {
                     Object.assign(type.data, res.data);
                 }
             } catch (err) {
-                throw new Error(`HTTP error! status: ${err}`);
+                console.log(`HTTP error! status: ${err}`);
             }
         }
     };
