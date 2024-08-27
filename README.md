@@ -1,5 +1,6 @@
 # DemoVenueRental
- 測試租借場地
+測試平台
+ 
 
 	1. .NET Core 8.0 MVC
 	   使用 .NET Core 8.0 作為後端框架。
@@ -12,7 +13,7 @@
 	5. PartialView
 	   利用 PartialView 來做為前端的模板。
 	6. Axios API
-	   透過 Axios API 來取得 PartialView 模板和進行其他 API 請求。
+	   透過 Axios API 來取得 PartialView 模板或靜態網頁及其他 API 請求。
 	7. Serilog
 	   使用 Serilog 作為日誌記錄工具。
 	8. 驗證屬性 (Data Annotations)
