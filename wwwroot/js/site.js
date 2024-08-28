@@ -7,6 +7,10 @@
     watch,
     provide,
     inject,
+    onBeforeMount,
+    onUpdated,
+    onBeforeUpdate,
+    nextTick
 } = Vue;
 
 // 檢查物件是否為空

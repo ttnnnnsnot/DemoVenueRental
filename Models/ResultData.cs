@@ -3,7 +3,7 @@
     public class ResultData
     {
         public bool state { get; set; }
-        public string errorMsg { get; set; } = string.Empty;
+        public string message { get; set; } = string.Empty;
     }
 
     public class ResultData<T> : ResultData where T : new()

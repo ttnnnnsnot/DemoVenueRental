@@ -63,7 +63,7 @@ namespace DemoVenueRental.Controllers.Api
                                       .Select(e => e.ErrorMessage)
                                       .FirstOrDefault();
 
-                    return Ok(new ResultData<int>() { errorMsg = firstError ?? "資料有誤" });
+                    return Ok(new ResultData<int>() { message = firstError ?? "資料有誤" });
                 }
 
                 var result = await _userService.Register(model);
@@ -86,7 +86,7 @@ namespace DemoVenueRental.Controllers.Api
                                       .Select(e => e.ErrorMessage)
                                       .FirstOrDefault();
 
-                    return Ok(new ResultData<int>() { errorMsg = firstError ?? "資料有誤" });
+                    return Ok(new ResultData<int>() { message = firstError ?? "資料有誤" });
                 }
 
                 var result = await _userService.Login(model);

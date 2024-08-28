@@ -56,7 +56,7 @@ namespace DemoVenueRental.Extensions
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = context.Response.StatusCode == 404 ? (int)HttpStatusCode.OK : context.Response.StatusCode;
 
-            var errorResponse = new ResultData() { errorMsg = msg };
+            var errorResponse = new ResultData() { message = msg };
 
             await context.Response.WriteAsync(errorResponse.ToSerialize());
         }

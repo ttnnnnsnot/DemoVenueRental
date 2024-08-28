@@ -3,16 +3,16 @@
     const currentState = ref(1); // 初始狀態為state1
     const headerLinks = reactive([
         {
-            linktype: 'a', text: '找場地', link: `${getBaseUrl()}home/index`, className: 'nav-link text-dark', show: true
+            linktype: 'a', text: '找場地', link: `${getBaseUrl()}home/index`, className: 'nav-link text-dark', show: false
         },
         {
-            linktype: 'a', text: '成為場地主', link: `${getBaseUrl()}home/test`, className: 'nav-link text-dark', show: true
+            linktype: 'a', text: '成為場地主', link: `${getBaseUrl()}home/PlaceManage`, className: 'nav-link text-dark', show: false
         },
         {
-            linktype: 'a', text: '註冊', className: 'nav-link text-dark', show: true, onclick: ShowRegisterModal
+            linktype: 'a', text: '註冊', className: 'nav-link text-dark', show: false, onclick: ShowRegisterModal
         },
         {
-            linktype: 'a', text: '登入', className: 'nav-link text-dark', show: true, onclick: ShowLoginModal
+            linktype: 'a', text: '登入', className: 'nav-link text-dark', show: false, onclick: ShowLoginModal
         },
         {
             linktype: 'dropdown', show: false, onclick: Logouted
@@ -44,15 +44,6 @@
         }
     };
 
-    const onMounted = async () => {
-        try {
-            isLoggedIn.value = await IsLoggedIn();
-            setShowType(currentState.value);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     // 監聽isLoggedIn的變化
     watch(isLoggedIn, (newValue) => {
         if (!newValue) {
@@ -73,7 +64,6 @@
         currentState,
         headerLinks,
         setShowType,
-        onMounted,
     };
 };
 
@@ -97,10 +87,7 @@ const headerTemplate = defineAsyncComponent(async () => {
 
             const {
                 headerLinks,
-                onMounted: headerOnMounted,
             } = headerOption(ShowRegisterModal, ShowLoginModal, Logouted);
-
-            onMounted(async () => headerOnMounted());
 
             return {
                 headerLinks,

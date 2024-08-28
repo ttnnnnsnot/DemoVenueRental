@@ -46,7 +46,8 @@
                     }
 
                 } catch (error) {
-                    console.error('Error:', error);
+                    errorMsg.value = "伺服器異常";
+                    passwordHash.value = '';
                 }
             };
 

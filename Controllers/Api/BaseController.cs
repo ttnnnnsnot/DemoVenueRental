@@ -17,7 +17,7 @@ namespace DemoVenueRental.Controllers.Api
         protected internal virtual string HandleError(string errorMessage, Exception ex)
         {
             LoggerService.LogError(errorMessage, ex);
-            var errorResult = new ResultData { state = false, errorMsg = errorMessage };
+            var errorResult = new ResultData { state = false, message = errorMessage };
             return errorResult.ToSerialize();
         }
     }

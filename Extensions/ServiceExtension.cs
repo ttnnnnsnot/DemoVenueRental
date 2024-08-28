@@ -8,6 +8,7 @@ using System.Data;
 using DemoVenueRental.Sql;
 using DemoVenueRental.Services;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Authentication;
 
 namespace DemoVenueRental.Extensions
 {
@@ -66,8 +67,13 @@ namespace DemoVenueRental.Extensions
                 {
                     options.ExpireTimeSpan = TimeSpan.FromDays(1);
                     options.SlidingExpiration = true;
-                    options.AccessDeniedPath = "/Login/AccessDenied";
-                    options.LoginPath = "/Login/Index";
+                    options.AccessDeniedPath = "/Home/AccessDenied";
+                    options.LoginPath = "/Home/NoLogined";
+                    options.Events = new CookieAuthenticationEvents
+                    {
+                        OnRedirectToLogin = context => RedirectToLogin(context),
+                        OnRedirectToAccessDenied = context => RedirectToAccessDenied(context)
+                    };
                 });
 
             // 設定AddAntiforgery驗証
@@ -76,6 +82,34 @@ namespace DemoVenueRental.Extensions
                 options.FormFieldName = "AntiforgeryToken";
                 options.HeaderName = "X-CSRF-TOKEN";
             });
+        }
+
+        private static Task RedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
+        {
+            var refererUrl = context.Request.Headers["Referer"].ToString();
+
+            // 確保 RefererUrl 是相對路徑
+            if (Uri.TryCreate(refererUrl, UriKind.Absolute, out Uri? NewrefererUri))
+            {
+                refererUrl = NewrefererUri.PathAndQuery ?? "/";
+            }
+
+            context.Response.Redirect($"{context.RedirectUri}&RefererUrl={Uri.EscapeDataString(refererUrl)}");
+            return Task.CompletedTask;
+        }
+
+        private static Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
+        {
+            var refererUrl = context.Request.Headers["Referer"].ToString();
+
+            // 確保 RefererUrl 是相對路徑
+            if (Uri.TryCreate(refererUrl, UriKind.Absolute, out Uri? NewrefererUri))
+            {
+                refererUrl = NewrefererUri.PathAndQuery ?? "/";
+            }
+
+            context.Response.Redirect($"{context.RedirectUri}&RefererUrl={Uri.EscapeDataString(refererUrl)}");
+            return Task.CompletedTask;
         }
     }
 }

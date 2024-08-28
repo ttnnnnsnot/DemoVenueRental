@@ -1,0 +1,14 @@
+﻿<div class="myalert">
+    <div v-for="(item, index) in alerts"
+         :key="item.id"
+         class="alert item.alertType alert-dismissible animate__animated"
+         role="alert"
+         :class="[item.alertType, {'animate__fadeInUp': !item.removing, 'animate__fadeOutRight': item.removing}]"
+         @@animationend="onAnimationEnd(item.id)">
+         <div class="d-flex">
+            <div class="col me-2"><i :class="item.iconType"></i></div>
+            <div class="col"><span v-html="item.message"></span></div>
+         </div>
+        <button type="button" class="btn-close" v-on:click="remove(item.id)" aria-label="Close"></button>
+    </div>
+</div>

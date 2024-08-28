@@ -1,4 +1,6 @@
+using DemoVenueRental.Extensions;
 using DemoVenueRental.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -16,9 +18,33 @@ namespace DemoVenueRental.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [Authorize(Roles="Admin")]
+        public IActionResult PlaceManage()
         {
             return View();
+        }
+
+        public IActionResult NoLogined(string ReturnUrl, string RefererUrl)
+        {
+            if (string.IsNullOrEmpty(ReturnUrl))
+            {
+                ReturnUrl = "/";
+            }
+
+            TempData["NoLogin"] = (new ResultData() { message = RefererUrl }).ToSerialize();
+            TempData["LoginedUrl"] = (new ResultData() { message = ReturnUrl }).ToSerialize();
+            return LocalRedirect(RefererUrl);
+        }
+
+        public IActionResult AccessDenied(string ReturnUrl, string RefererUrl)
+        {
+            if (string.IsNullOrEmpty(ReturnUrl))
+            {
+                ReturnUrl = "/";
+            }
+
+            TempData["AccessDenied"] = (new ResultData() { message = "您沒有權限" }).ToSerialize();
+            return LocalRedirect(RefererUrl);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

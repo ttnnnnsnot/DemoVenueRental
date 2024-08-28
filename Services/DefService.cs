@@ -27,7 +27,7 @@ namespace DemoVenueRental.Services
             if (def.listItem.Count == 0)
             {
                 resultData.state = false;
-                resultData.errorMsg = "查無資料";
+                resultData.message = "查無資料";
                 return resultData.ToSerialize();
             }
 

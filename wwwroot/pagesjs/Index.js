@@ -20,7 +20,7 @@ const appOption = {
             loginComponent, showLoginModal,
             Logout } = useRegister();
 
-        const isLoggedIn = ref(false);
+        const isLoggedIn = ref(null);
 
         const fetchData1 = () => API.GET('def/sport');
         const fetchData2 = () => API.GET('def/area');
@@ -28,7 +28,7 @@ const appOption = {
         const {
             selectTypes,
             fnChangeText,
-            onMounted: indexSelectMoreOnMounted
+            onBeforeMount: indexSelectMoreonBeforeMount
         } = indexSelectMore([fetchData1, fetchData2]);
 
         const search = () => searchFunction(selectTypes);
@@ -41,10 +41,26 @@ const appOption = {
         const LoggedIn = async () => {
             isLoggedIn.value = await IsLoggedIn();
         }
-             
-        onMounted(async () => {
-            await indexSelectMoreOnMounted();
+        
+        onBeforeMount(async () => {
+            isLoggedIn.value = await IsLoggedIn();
+            await indexSelectMoreonBeforeMount();
         });
+
+        onMounted(async () => {
+            await nextTick();
+            if (!isEmptyObject(accessDenied)) {
+                Alert.addDanger("您沒有權限!")
+            }
+        });
+
+        watch(loginComponent, (newVal) => {
+            if (!isEmptyObject(noLogin)) {
+                showLoginModal();
+            }
+        });
+
+
 
         provide('isLoggedIn', isLoggedIn);
 
