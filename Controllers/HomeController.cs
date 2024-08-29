@@ -18,8 +18,14 @@ namespace DemoVenueRental.Controllers
             return View();
         }
 
-        [Authorize(Roles="Admin")]
+        [Authorize]
         public IActionResult PlaceManage()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult PlaceEdit()
         {
             return View();
         }

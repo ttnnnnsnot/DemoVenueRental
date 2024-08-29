@@ -9,7 +9,7 @@ namespace DemoVenueRental.Services
         Task<string> GetDef(string typeName);
     }
 
-    public class DefService : BaseService , IDefService
+    public class DefService : IDefService
     {
         private readonly IDefData _defData;
 

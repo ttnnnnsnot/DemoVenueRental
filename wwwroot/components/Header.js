@@ -1,47 +1,37 @@
 ﻿const headerOption = (ShowRegisterModal, ShowLoginModal, Logouted) => {
     const isLoggedIn = inject('isLoggedIn');
-    const currentState = ref(1); // 初始狀態為state1
+    const currentState = inject('currentState');
     const headerLinks = reactive([
         {
-            linktype: 'a', text: '找場地', link: `${getBaseUrl()}home/index`, className: 'nav-link text-dark', show: false
+            OrderNum: 1,state: [1,2], linktype: 'a', text: '找場地', link: `${getBaseUrl()}home/index`, className: 'nav-link text-dark', show: false
         },
         {
-            linktype: 'a', text: '成為場地主', link: `${getBaseUrl()}home/PlaceManage`, className: 'nav-link text-dark', show: false
+            OrderNum: 2, state: [1,2], linktype: 'a', text: '成為場地主', link: `${getBaseUrl()}home/PlaceManage`, className: 'nav-link text-dark', show: false
         },
         {
-            linktype: 'a', text: '註冊', className: 'nav-link text-dark', show: false, onclick: ShowRegisterModal
+            OrderNum: 3, state: [1], linktype: 'a', text: '註冊', className: 'nav-link text-dark', show: false, onclick: ShowRegisterModal
         },
         {
-            linktype: 'a', text: '登入', className: 'nav-link text-dark', show: false, onclick: ShowLoginModal
+            OrderNum: 4, state: [1], linktype: 'a', text: '登入', className: 'nav-link text-dark', show: false, onclick: ShowLoginModal
         },
         {
-            linktype: 'dropdown', show: false, onclick: Logouted
-        }
+            OrderNum: 99, state: [2,3], linktype: 'dropdown', show: false, onclick: Logouted
+        },
+        {
+            OrderNum: 5, state: [3], linktype: 'a', text: '返回管理頁', className: 'nav-link text-dark', show: false, link: `${getBaseUrl()}home/PlaceManage`
+        },
     ]);
 
     const setShowType = (state) => {
-        switch (state) {
-            case 1:
-                headerLinks[0].show = true;
-                headerLinks[1].show = true;
-                headerLinks[2].show = true;
-                headerLinks[3].show = true;
-                headerLinks[4].show = false;
-                break;
-            case 2:
-                headerLinks[0].show = true;
-                headerLinks[1].show = true;
-                headerLinks[2].show = false;
-                headerLinks[3].show = false;
-                headerLinks[4].show = true;
-                break;
-            default:
-                // 如果狀態不匹配，則隱藏所有連結
-                headerLinks.forEach(item => {
-                    item.show = false;
-                });
-                break;
-        }
+        headerLinks.forEach(item => {
+            if (item.state.includes(state)) {
+                item.show = true;
+            } else {
+                item.show = false;
+            }
+        });
+        // 根據 OrderNum 進行排序
+        headerLinks.sort((a, b) => a.OrderNum - b.OrderNum);
     };
 
     // 監聽isLoggedIn的變化
@@ -51,7 +41,6 @@
         } else {
             currentState.value = 2;
         }
-        setShowType(currentState.value);
     });
 
     // 監聽currentState的變化
@@ -60,10 +49,9 @@
     });
 
     return {
-        isLoggedIn,
-        currentState,
         headerLinks,
         setShowType,
+        currentState
     };
 };
 
@@ -85,12 +73,16 @@ const headerTemplate = defineAsyncComponent(async () => {
                 emit('logouted');
             }
 
+            onBeforeMount(async () => {
+                setShowType(currentState.value);
+            });
+
             const {
-                headerLinks,
+                headerLinks, setShowType, currentState
             } = headerOption(ShowRegisterModal, ShowLoginModal, Logouted);
 
             return {
-                headerLinks,
+                headerLinks
             };
         }
     }

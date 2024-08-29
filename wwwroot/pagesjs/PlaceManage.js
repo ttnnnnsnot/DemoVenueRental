@@ -27,25 +27,19 @@ const appOption = {
 
         onBeforeMount(async () => {
             await LayoutonBeforeMount();
-            await indexSelectMoreonBeforeMount();
         });
 
         onMounted(async () => {
             await LayoutonMounted();
+            headerCurrentState.value = 2;
         });
 
-        // Index.js
-        const fetchData1 = () => API.GET('def/sport');
-        const fetchData2 = () => API.GET('def/area');
-
-        const {
-            selectTypes,
-            fnChangeText,
-            onBeforeMount: indexSelectMoreonBeforeMount
-        } = indexSelectMore([fetchData1, fetchData2]);
-
-        const search = () => searchFunction(selectTypes);
-
+        // PlaceManage.js
+        const LinkEditUrl = async (id) => {
+            if (id === 0) {
+                location.href ='/home/PlaceEdit';
+            }
+        }
 
         return {
             // Layout.js
@@ -54,11 +48,8 @@ const appOption = {
             LoggedIn,
             Logouted,
 
-            // Index.js
-            fnChangeText,
-            selectTypes,
-            search,
-
+            // PlaceManage.js
+            LinkEditUrl
         }
     }
 };

@@ -79,7 +79,7 @@ namespace DemoVenueRental.Sql
                 {
                     transaction.Rollback();
                     result.message = "註冊失敗";
-                    LoggerService.LogError("註冊失敗", ex);
+                    LoggerService.LogError(result.message, ex);
                     return result;
                 }
                 finally
