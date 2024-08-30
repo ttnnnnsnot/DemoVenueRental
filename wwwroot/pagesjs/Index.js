@@ -16,9 +16,12 @@ const appOption = {
         'index-banner': indexBannerOption,
     },
     setup() {
+        const instance = getCurrentInstance();
         // Layout.js
-        const { registerComponent, showRegisterModal,
-            loginComponent, showLoginModal,
+        const { 
+            checkPathName,
+            registerComponent, showRegisterModel,
+            loginComponent, showLoginModel,
             Logouted,
             LoggedIn,
             LayoutonBeforeMount,
@@ -44,13 +47,14 @@ const appOption = {
             onBeforeMount: indexSelectMoreonBeforeMount
         } = indexSelectMore([fetchData1, fetchData2]);
 
-        const search = () => searchFunction(selectTypes);
-
+        const search = () => {
+            checkPathName('/home/placeedit');
+        }//searchFunction(selectTypes);
 
         return {
             // Layout.js
-            showRegisterModal, registerComponent,
-            loginComponent, showLoginModal,
+            registerComponent, showRegisterModel,
+            loginComponent, showLoginModel,
             LoggedIn,
             Logouted,
 

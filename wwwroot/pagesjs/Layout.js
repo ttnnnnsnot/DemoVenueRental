@@ -1,25 +1,31 @@
 ﻿import registerOption from '../components/Register.js';
 import loginOption from '../components/Login.js';
 import headerTemplate from '../components/Header.js';
+import loginStstem from '../js/LoginSystem.js';
 
 const useRegister = () => {
 
     const registerComponent = ref(null);
-    const showRegisterModal = () => {
+    const showRegisterModel = () => {
         if (registerComponent.value) {
             registerComponent.value.showModel();
         }
     };
 
     const loginComponent = ref(null);
-    const showLoginModal = () => {
+    const showLoginModel = () => {
         if (loginComponent.value) {
             loginComponent.value.showModel();
         }
     };
 
+    const { checkPathName, onMounted: onMountedLoginSystem, listenerOnLogout } = loginStstem(showLoginModel);
+
+    const isLoggedIn = ref(null);
+
     const Logout = async () => {
         try {
+            isLoggedIn.value = false;
             return await API.GET('User/Logout');
         } catch (error) {
             console.log(error);
@@ -27,11 +33,10 @@ const useRegister = () => {
         }
     }
 
-    const isLoggedIn = ref(null);
-
     const Logouted = async () => {
         await Logout();
-        isLoggedIn.value = await IsLoggedIn();
+        checkPathName();
+        await listenerOnLogout();
     }
 
     const LoggedIn = async () => {
@@ -47,28 +52,32 @@ const useRegister = () => {
     const onMounted = async () => {
         await nextTick();
         isLoggedIn.value = await IsLoggedIn();
+        await onMountedLoginSystem();
     };
 
     return {
-        registerComponent,
-        showRegisterModal,
-
-        loginComponent,
-        showLoginModal,
+        registerComponent, showRegisterModel,
+        loginComponent, showLoginModel,
 
         isLoggedIn,
         Logouted,
         LoggedIn,
 
         onBeforeMount,
-        onMounted
+        onMounted,
+
+        checkPathName
     };
 }
 
 export const setupLayout = () => {
     // Layout.js
-    const { registerComponent, showRegisterModal,
-        loginComponent, showLoginModal,
+    const {
+        checkPathName,
+
+        registerComponent, showRegisterModel,
+        loginComponent, showLoginModel,
+
         isLoggedIn,
         Logouted,
         LoggedIn,
@@ -80,22 +89,31 @@ export const setupLayout = () => {
 
     watch(loginComponent, (newVal) => {
         if (!isEmptyObject(noLogin)) {
-            showLoginModal();
+            showLoginModel();
         }
     });
 
     provide('isLoggedIn', isLoggedIn);
     provide('currentState', headerCurrentState);
 
+    provide('Logouted', Logouted);
+    provide('showRegisterModel', showRegisterModel);
+    provide('showLoginModel', showLoginModel);
+
+    provide('checkPathName', checkPathName);
+
     return {
-        showRegisterModal, registerComponent,
-        loginComponent, showLoginModal,
+        registerComponent, showRegisterModel,
+        loginComponent, showLoginModel,
+
         LoggedIn, Logouted,
 
         LayoutonBeforeMount,
         LayoutonMounted,
 
-        headerCurrentState
+        headerCurrentState,
+
+        checkPathName
     };
 }
 

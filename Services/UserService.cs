@@ -3,6 +3,7 @@ using DemoVenueRental.Sql;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DemoVenueRental.Services
 {
@@ -14,6 +15,7 @@ namespace DemoVenueRental.Services
         Task Logout();
         bool IsLogged();
         int GetUserId();
+        bool CheckRole(ClaimsPrincipal User,string Role);
     }
 
     public class UserService : IUserService
@@ -25,6 +27,15 @@ namespace DemoVenueRental.Services
         {
             _userData = userData;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public bool CheckRole(ClaimsPrincipal User, string Role)
+        {
+            if (User.IsInRole(Role))
+            {
+                return true;
+            }
+            return false;
         }
 
         public int GetUserId()

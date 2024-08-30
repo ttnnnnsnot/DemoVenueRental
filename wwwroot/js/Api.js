@@ -106,3 +106,12 @@ const IsLoggedIn = async () => {
         return false;
     }
 }
+
+// 確認是否有權限
+const getRole = async (role = "Admin") => {
+    try {
+        return await API.GET(`User/CheckRole/${role}`);
+    } catch (error) {
+        return false;
+    }
+}

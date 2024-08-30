@@ -15,6 +15,12 @@ namespace DemoVenueRental.Controllers.Api
             _userService = userService;
         }
 
+        [HttpGet("CheckRole/{Role}")]
+        public IActionResult CheckRole(string Role)
+        {
+            return Ok(_userService.CheckRole(User, Role));
+        }
+
         // GET: api/<DefController>/Logout
         [HttpGet("Logout")]
         public IActionResult Logout()
@@ -59,11 +65,7 @@ namespace DemoVenueRental.Controllers.Api
             {
                 if (!ModelState.IsValid)
                 {
-                    var firstError = ModelState.Values.SelectMany(v => v.Errors)
-                                      .Select(e => e.ErrorMessage)
-                                      .FirstOrDefault();
-
-                    return Ok(new ResultData<int>() { message = firstError ?? "資料有誤" });
+                    return Ok(ModelStateFirstError(ModelState));
                 }
 
                 var result = await _userService.Register(model);
@@ -82,11 +84,7 @@ namespace DemoVenueRental.Controllers.Api
             {
                 if (!ModelState.IsValid)
                 {
-                    var firstError = ModelState.Values.SelectMany(v => v.Errors)
-                                      .Select(e => e.ErrorMessage)
-                                      .FirstOrDefault();
-
-                    return Ok(new ResultData<int>() { message = firstError ?? "資料有誤" });
+                    return Ok(ModelStateFirstError(ModelState));
                 }
 
                 var result = await _userService.Login(model);

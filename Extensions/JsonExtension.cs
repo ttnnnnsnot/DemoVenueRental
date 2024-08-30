@@ -31,6 +31,24 @@ namespace DemoVenueRental.Extensions
         }
 
         /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="me"></param>
+        /// <returns></returns>
+        public static async Task<T> ToDeserializeAsync<T>(this string me) where T : class, new ()
+        {
+            try
+            {
+                return await Task.Run(() => JsonSerializer.Deserialize<T>(me, Default) ?? new T());
+            }
+            catch
+            {
+                return new T();
+            }
+        }
+
+        /// <summary>
         /// 反序列化
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -41,6 +59,24 @@ namespace DemoVenueRental.Extensions
             try
             {
                 return JsonSerializer.Serialize(me, Default) ?? string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// 反序列化
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="me"></param>
+        /// <returns></returns>
+        public static async Task<string> ToSerializeAsync<T>(this T me) where T : class
+        {
+            try
+            {
+                return await Task.Run(() => JsonSerializer.Serialize(me, Default) ?? string.Empty);
             }
             catch
             {

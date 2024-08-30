@@ -72,7 +72,7 @@ namespace DemoVenueRental.Extensions
                     options.ExpireTimeSpan = TimeSpan.FromDays(1);
                     options.SlidingExpiration = true;
                     options.AccessDeniedPath = "/Home/AccessDenied";
-                    options.LoginPath = "/Home/NoLogined";
+                    options.LoginPath = "/";
                     options.Events = new CookieAuthenticationEvents
                     {
                         OnRedirectToLogin = context => RedirectToLogin(context),

@@ -2,7 +2,6 @@
 using DemoVenueRental.Models;
 using DemoVenueRental.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoVenueRental.Controllers.Api
@@ -20,12 +19,21 @@ namespace DemoVenueRental.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PlaceInfo placeInfo)
+        public async Task<IActionResult> Post([FromBody] PlaceInfo model)
         {
-            if (!ModelState.IsValid)
-                return Ok(ModelState.ToSerialize());
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Ok(ModelStateFirstError(ModelState));
+                }
 
-            return Ok(await _placeService.InsertPlace(placeInfo));
+                return Ok(await _placeService.InsertPlace(model).ToSerializeAsync());
+            }
+            catch (Exception ex)
+            {
+                return Ok(HandleError("儲存失敗!", ex));
+            }
         }
     }
 }

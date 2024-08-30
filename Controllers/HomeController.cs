@@ -24,31 +24,14 @@ namespace DemoVenueRental.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles="Admin")]
         public IActionResult PlaceEdit()
         {
             return View();
         }
 
-        public IActionResult NoLogined(string ReturnUrl, string RefererUrl)
+        public IActionResult AccessDenied(string RefererUrl)
         {
-            if (string.IsNullOrEmpty(ReturnUrl))
-            {
-                ReturnUrl = "/";
-            }
-
-            TempData["NoLogin"] = (new ResultData() { message = RefererUrl }).ToSerialize();
-            TempData["LoginedUrl"] = (new ResultData() { message = ReturnUrl }).ToSerialize();
-            return LocalRedirect(RefererUrl);
-        }
-
-        public IActionResult AccessDenied(string ReturnUrl, string RefererUrl)
-        {
-            if (string.IsNullOrEmpty(ReturnUrl))
-            {
-                ReturnUrl = "/";
-            }
-
             TempData["AccessDenied"] = (new ResultData() { message = "您沒有權限" }).ToSerialize();
             return LocalRedirect(RefererUrl);
         }
