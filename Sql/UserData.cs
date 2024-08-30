@@ -37,7 +37,7 @@ namespace DemoVenueRental.Sql
             
             if (await IsEmailExist(model.Email))
             {
-                result.errorMsg = "Email已存在";
+                result.message = "Email已存在";
                 return result;
             }
 
@@ -64,7 +64,7 @@ namespace DemoVenueRental.Sql
                 
                     if (userId == 0)
                     {
-                        result.errorMsg = "註冊失敗";
+                        result.message = "註冊失敗";
                         transaction.Rollback();
                         return result;
                     }
@@ -78,8 +78,8 @@ namespace DemoVenueRental.Sql
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    result.errorMsg = "註冊失敗";
-                    LoggerService.LogError("註冊失敗", ex);
+                    result.message = "註冊失敗";
+                    LoggerService.LogError(result.message, ex);
                     return result;
                 }
                 finally
@@ -108,13 +108,13 @@ namespace DemoVenueRental.Sql
 
             if (user == null)
             {
-                result.errorMsg = "Email不存在";
+                result.message = "Email不存在";
                 return result;
             }
 
             if (!model.PasswordHash.ToVerify(user.PasswordHash))
             {
-                result.errorMsg = "密碼錯誤";
+                result.message = "密碼錯誤";
                 return result;
             }
 

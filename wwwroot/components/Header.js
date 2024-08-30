@@ -1,56 +1,41 @@
-﻿const headerOption = (ShowRegisterModal, ShowLoginModal, Logouted) => {
+﻿const headerOption = () => {
+    const showRegisterModel = inject('showRegisterModel');
+    const showLoginModel = inject('showLoginModel');
+    const Logouted = inject('Logouted');
     const isLoggedIn = inject('isLoggedIn');
-    const currentState = ref(1); // 初始狀態為state1
+    const currentState = inject('currentState');
+
     const headerLinks = reactive([
         {
-            linktype: 'a', text: '找場地', link: `${getBaseUrl()}home/index`, className: 'nav-link text-dark', show: true
+            OrderNum: 1,state: [1,2], linktype: 'a', text: '找場地', link: `${getBaseUrl()}home/placeedit`, className: 'nav-link text-dark', show: false
         },
         {
-            linktype: 'a', text: '成為場地主', link: `${getBaseUrl()}home/test`, className: 'nav-link text-dark', show: true
+            OrderNum: 2, state: [1,2], linktype: 'a', text: '成為場地主', link: `${getBaseUrl()}home/PlaceManage`, className: 'nav-link text-dark', show: false
         },
         {
-            linktype: 'a', text: '註冊', className: 'nav-link text-dark', show: true, onclick: ShowRegisterModal
+            OrderNum: 3, state: [1], linktype: 'a', text: '註冊', className: 'nav-link text-dark', show: false, onclick: showRegisterModel
         },
         {
-            linktype: 'a', text: '登入', className: 'nav-link text-dark', show: true, onclick: ShowLoginModal
+            OrderNum: 4, state: [1], linktype: 'a', text: '登入', className: 'nav-link text-dark', show: false, onclick: showLoginModel
         },
         {
-            linktype: 'dropdown', show: false, onclick: Logouted
-        }
+            OrderNum: 99, state: [2, 3], linktype: 'dropdown', show: false, onclick: Logouted
+        },
+        {
+            OrderNum: 5, state: [3], linktype: 'a', text: '返回管理頁', className: 'nav-link text-dark', show: false, link: `${getBaseUrl()}home/PlaceManage`
+        },
     ]);
 
     const setShowType = (state) => {
-        switch (state) {
-            case 1:
-                headerLinks[0].show = true;
-                headerLinks[1].show = true;
-                headerLinks[2].show = true;
-                headerLinks[3].show = true;
-                headerLinks[4].show = false;
-                break;
-            case 2:
-                headerLinks[0].show = true;
-                headerLinks[1].show = true;
-                headerLinks[2].show = false;
-                headerLinks[3].show = false;
-                headerLinks[4].show = true;
-                break;
-            default:
-                // 如果狀態不匹配，則隱藏所有連結
-                headerLinks.forEach(item => {
-                    item.show = false;
-                });
-                break;
-        }
-    };
-
-    const onMounted = async () => {
-        try {
-            isLoggedIn.value = await IsLoggedIn();
-            setShowType(currentState.value);
-        } catch (error) {
-            console.error(error);
-        }
+        headerLinks.forEach(item => {
+            if (item.state.includes(state)) {
+                item.show = true;
+            } else {
+                item.show = false;
+            }
+        });
+        // 根據 OrderNum 進行排序
+        headerLinks.sort((a, b) => a.OrderNum - b.OrderNum);
     };
 
     // 監聽isLoggedIn的變化
@@ -60,7 +45,6 @@
         } else {
             currentState.value = 2;
         }
-        setShowType(currentState.value);
     });
 
     // 監聽currentState的變化
@@ -69,41 +53,26 @@
     });
 
     return {
-        isLoggedIn,
-        currentState,
         headerLinks,
         setShowType,
-        onMounted,
+        currentState
     };
 };
 
 const headerTemplate = defineAsyncComponent(async () => {
     return {
         template: await API.GetTemplate('templates/HeaderLinks.html'),
-        emits: ['show-login', 'show-register', 'logouted'],
-        setup(props, { emit }) {
-
-            const ShowRegisterModal = () => {
-                emit('show-register');
-            };
-
-            const ShowLoginModal = () => {
-                emit('show-login');
-            };
-
-            const Logouted = () => {
-                emit('logouted');
-            }
-
+        setup() {
             const {
-                headerLinks,
-                onMounted: headerOnMounted,
-            } = headerOption(ShowRegisterModal, ShowLoginModal, Logouted);
+                headerLinks, setShowType, currentState
+            } = headerOption();
 
-            onMounted(async () => headerOnMounted());
+            onBeforeMount(async () => {
+                setShowType(currentState.value);
+            });
 
             return {
-                headerLinks,
+                headerLinks
             };
         }
     }

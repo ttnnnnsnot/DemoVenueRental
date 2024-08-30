@@ -1,0 +1,94 @@
+﻿@model DemoVenueRental.Models.PlaceViewModel
+
+<div class="container pt-3">
+    <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">場所資訊</button>
+        <button class="nav-link" id="nav-type-tab" data-bs-toggle="tab" data-bs-target="#nav-type" type="button" role="tab" aria-controls="nav-type" aria-selected="true">場所類型</button>
+        <button class="nav-link" id="nav-img-tab" data-bs-toggle="tab" data-bs-target="#nav-img" type="button" role="tab" aria-controls="nav-img" aria-selected="false">場所圖片</button>
+    </div>
+    <div class="tab-content" id="PlaceEditTab">
+        <div class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <form class="container-fluid" method="post">
+                <div class="row gy-4">
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="場所名稱" asp-for="PlaceInfo.Name">
+                            <label asp-for="PlaceInfo.Name">場所名稱</label>
+                            <span asp-validation-for="PlaceInfo.Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <select class="form-control" asp-for="PlaceInfo.CityName">
+                                <option value="" disabled>場所地址</option>
+                                <option value="1" selected>台北市</option>
+                                <option value="2">新北市</option>
+                                <option value="3">桃園市</option>
+                                <option value="4">台中市</option>
+                                <option value="5">台南市</option>
+                                <option value="6">高雄市</option>
+                            </select>
+                            <label asp-for="PlaceInfo.CityName">場所地址</label>
+                            <span asp-validation-for="PlaceInfo.CityName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="場所地址" asp-for="PlaceInfo.Address">
+                            <label asp-for="PlaceInfo.Address">場所地址</label>
+                            <span asp-validation-for="PlaceInfo.Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="場地介紹" style="height: 100px" asp-for="PlaceInfo.Describe"></textarea>
+                            <label asp-for="PlaceInfo.Describe">場地介紹</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="場地規則" style="height: 100px" asp-for="PlaceInfo.Rules"></textarea>
+                            <label asp-for="PlaceInfo.Rules">場地規則</label>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                        <button type="button" v-on:click="nextDone" class="btn btn-primary">下一步</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="nav-type" role="tabpanel" aria-labelledby="nav-img-tab">
+            <form class="container-fluid" method="post">
+                <div class="row gy-4">
+                    <div class="col">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="name@example.com2222" asp-for="PlaceInfoType.PlaceId">
+                            <label asp-for="PlaceInfoType.PlaceId">Email address222</label>
+                            <span asp-validation-for="PlaceInfoType.PlaceId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between">
+                        <button type="button" v-on:click="upDone" class="btn btn-primary">上一步</button>
+                        <button type="button" v-on:click="nextDone" class="btn btn-primary">下一步</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="nav-img" role="tabpanel" aria-labelledby="nav-img-tab">
+            <form class="container-fluid" method="post">
+                <div class="row gy-4">
+                    <div class="col">
+                    </div>
+                    <div class="col-12 d-flex justify-content-between">
+                        <button type="button" v-on:click="upDone" class="btn btn-primary">上一步</button>
+                        <button type="button" v-on:click="nextDone" class="btn btn-primary">下一步</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/pagesjs/PlaceEdit.js" asp-append-version="true" type="module"></script>
+}

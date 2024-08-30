@@ -37,7 +37,7 @@ const indexBannerOption = defineAsyncComponent(async () => {
                 setImageStyle
             } = indexBanner();
 
-            onMounted(() => startImageSwitching());
+            onBeforeMount(() => startImageSwitching());
 
             return {
                 bannerimg,

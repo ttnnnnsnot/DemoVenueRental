@@ -1,3 +1,4 @@
+using DemoVenueRental.Global;
 using DemoVenueRental.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
@@ -8,6 +9,10 @@ namespace DemoVenueRental.Extensions
     {
         public static void ConfigureMiddleware(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // 配置 CookieExtension
+            var httpContextAccessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
+            BaseCookie.Configure(httpContextAccessor);
+
             // 建立API的錯誤處理回應
             app.UseExceptionHandler(config =>
             {
@@ -56,7 +61,7 @@ namespace DemoVenueRental.Extensions
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = context.Response.StatusCode == 404 ? (int)HttpStatusCode.OK : context.Response.StatusCode;
 
-            var errorResponse = new ResultData() { errorMsg = msg };
+            var errorResponse = new ResultData() { message = msg };
 
             await context.Response.WriteAsync(errorResponse.ToSerialize());
         }
