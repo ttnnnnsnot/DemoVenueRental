@@ -3,6 +3,7 @@ using DemoVenueRental.Sql;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DemoVenueRental.Services
 {
@@ -13,9 +14,11 @@ namespace DemoVenueRental.Services
         Task<ResultData<int>> Login(Login model);
         Task Logout();
         bool IsLogged();
+        int GetUserId();
+        bool CheckRole(ClaimsPrincipal User,string Role);
     }
 
-    public class UserService : BaseService , IUserService
+    public class UserService : IUserService
     {
         private readonly IUserData _userData;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -24,6 +27,25 @@ namespace DemoVenueRental.Services
         {
             _userData = userData;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public bool CheckRole(ClaimsPrincipal User, string Role)
+        {
+            if (User.IsInRole(Role))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public int GetUserId()
+        {
+            int UserId = 0;
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                int.TryParse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Sid), out UserId);
+            }
+            return UserId;
         }
 
         public bool IsLogged()
@@ -77,7 +99,7 @@ namespace DemoVenueRental.Services
             var authProperties = new AuthenticationProperties
             {
                 IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(30),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1),
                 IssuedUtc = DateTimeOffset.UtcNow,
             };
 

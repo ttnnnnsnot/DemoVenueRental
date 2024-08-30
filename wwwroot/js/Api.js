@@ -1,4 +1,8 @@
-﻿// 獲取 API 基本 URL
+﻿const handleApiError = (error) => {
+    return Promise.reject({ state: false, message: error.message });
+}
+
+// 獲取 API 基本 URL
 const getBaseUrl = (area) => {
     const protocol = `${location.protocol}//`;
     const host = location.hostname;
@@ -28,7 +32,37 @@ API.interceptors.request.use((config) => {
     return config;
 }, (error) => {
     // 對請求錯誤進行處理
-    return Promise.reject(error);
+    return handleApiError(error);
+});
+
+// 添加 response 攔截器 狀態碼500的錯誤處理
+API.interceptors.response.use((response) => {
+    return response;
+}, (error) => {
+    if (error.response) {
+        switch (error.response.status) {
+            case 400:
+                error.message = '請求錯誤';
+                break;
+            case 401:
+                error.message = '未授權，請重新登入';
+                break;
+            case 403:
+                error.message = '拒絕訪問';
+                break;
+            case 404:
+                error.message = '請求地址出錯';
+                break;
+            case 500:
+                error.message = '伺服器錯誤';
+                break;
+            default:
+                error.message = `連接錯誤 ${error.response.status}`;
+        }
+    } else {
+        error.message = '無法連接到伺服器';
+    }
+    return handleApiError(error);
 });
 
 API.GET = async (url, params) => {
@@ -38,8 +72,8 @@ API.GET = async (url, params) => {
                 params,
             });
             return JSON.parse(res.data);
-        } catch (res) {
-            return Promise.reject(res.message);
+        } catch (error) {
+            return handleApiError(error);
         }
 }
 
@@ -49,8 +83,8 @@ API.GetTemplate = async (url) => {
             responseType: 'text',
         });
         return res.data;
-    } catch (res) {
-        return Promise.reject(res.message);
+    } catch (error) {
+        return handleApiError(error);
     }
 }
 
@@ -59,8 +93,8 @@ API.POST = async (url, ...arg) => {
         const urlPath = getBaseUrl('api') + url;
         const res = await API.post(urlPath, ...arg);
         return JSON.parse(res.data);
-    } catch (res) {
-        return Promise.reject(res.message);
+    } catch (error) {
+        return handleApiError(error);
     }
 }
 
@@ -69,7 +103,15 @@ const IsLoggedIn = async () => {
     try {
         return await API.GET('User/IsLoggedIn');
     } catch (error) {
-        console.log(error);
+        return false;
+    }
+}
+
+// 確認是否有權限
+const getRole = async (role = "Admin") => {
+    try {
+        return await API.GET(`User/CheckRole/${role}`);
+    } catch (error) {
         return false;
     }
 }

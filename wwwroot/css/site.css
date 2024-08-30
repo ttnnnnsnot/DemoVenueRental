@@ -23,7 +23,14 @@ body {
 }
 
 main {
-    padding-top: 50px;
+    padding-top: 60px;
+}
+
+.myalert {
+    position: absolute;
+    bottom: 60px;
+    right:0;
+    white-space: nowrap;
 }
 
 footer {

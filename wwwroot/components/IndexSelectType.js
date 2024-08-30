@@ -36,15 +36,15 @@ export const indexSelectMore = (ArrayFunction) => {
         selectTypes[index].data.defaultText = text;
     };
 
-    const onMounted = async () => {
+    const onBeforeMount = async () => {
         for (const type of selectTypes) {
             try {
                 const res = await type.fetchData();
-                if (res.state) {
+                if (res) {
                     Object.assign(type.data, res.data);
                 }
-            } catch (err) {
-                console.log(`HTTP error! status: ${err}`);
+            } catch (error) {
+                console.log(error);
             }
         }
     };
@@ -52,7 +52,7 @@ export const indexSelectMore = (ArrayFunction) => {
     return {
         selectTypes,
         fnChangeText,
-        onMounted
+        onBeforeMount
     }
 }
 

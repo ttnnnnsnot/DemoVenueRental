@@ -8,6 +8,7 @@ using System.Data;
 using DemoVenueRental.Sql;
 using DemoVenueRental.Services;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Authentication;
 
 namespace DemoVenueRental.Extensions
 {
@@ -18,6 +19,9 @@ namespace DemoVenueRental.Extensions
             // 註冊服務
             services.AddControllers();
 
+            // 添加 IHttpContextAccessor 服務
+            services.AddHttpContextAccessor();
+
             // 註冊服務
             services.AddScoped<IDbConnection>(sp =>
             {
@@ -26,13 +30,14 @@ namespace DemoVenueRental.Extensions
                 return connection;
             });
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddScoped<IUserData, UserData>();
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IDefData, DefData>();
             services.AddScoped<IDefService, DefService>();
+
+            services.AddScoped<IPlaceData, PlaceData>();
+            services.AddScoped<IPlaceService, PlaceService>();
 
             // 全域設定
             services.AddControllersWithViews(options =>
@@ -66,8 +71,13 @@ namespace DemoVenueRental.Extensions
                 {
                     options.ExpireTimeSpan = TimeSpan.FromDays(1);
                     options.SlidingExpiration = true;
-                    options.AccessDeniedPath = "/Login/AccessDenied";
-                    options.LoginPath = "/Login/Index";
+                    options.AccessDeniedPath = "/Home/AccessDenied";
+                    options.LoginPath = "/";
+                    options.Events = new CookieAuthenticationEvents
+                    {
+                        OnRedirectToLogin = context => RedirectToLogin(context),
+                        OnRedirectToAccessDenied = context => RedirectToLogin(context)
+                    };
                 });
 
             // 設定AddAntiforgery驗証
@@ -76,6 +86,24 @@ namespace DemoVenueRental.Extensions
                 options.FormFieldName = "AntiforgeryToken";
                 options.HeaderName = "X-CSRF-TOKEN";
             });
+        }
+
+        private static Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
+        {
+            var refererUrl = context.Request.Headers["Referer"].ToString();
+
+            // 確保 RefererUrl 是相對路徑
+            if(string.IsNullOrEmpty(refererUrl))
+            {
+                refererUrl = "/";
+            }
+            else if (Uri.TryCreate(refererUrl, UriKind.Absolute, out Uri? NewrefererUri))
+            {
+                refererUrl = NewrefererUri.PathAndQuery ?? "/";
+            }
+
+            context.Response.Redirect($"{context.RedirectUri}&RefererUrl={Uri.EscapeDataString(refererUrl)}");
+            return Task.CompletedTask;
         }
     }
 }

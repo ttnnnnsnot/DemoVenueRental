@@ -16,12 +16,9 @@ const appOption = {
         'index-banner': indexBannerOption,
     },
     setup() {
-        const instance = getCurrentInstance();
         // Layout.js
-        const { 
-            checkPathName,
-            registerComponent, showRegisterModel,
-            loginComponent, showLoginModel,
+        const { registerComponent, showRegisterModal,
+            loginComponent, showLoginModal,
             Logouted,
             LoggedIn,
             LayoutonBeforeMount,
@@ -30,39 +27,29 @@ const appOption = {
 
         onBeforeMount(async () => {
             await LayoutonBeforeMount();
-            await indexSelectMoreonBeforeMount();
         });
 
         onMounted(async () => {
             await LayoutonMounted();
+            headerCurrentState.value = 2;
         });
 
-        // Index.js
-        const fetchData1 = () => API.GET('def/sport');
-        const fetchData2 = () => API.GET('def/area');
-
-        const {
-            selectTypes,
-            fnChangeText,
-            onBeforeMount: indexSelectMoreonBeforeMount
-        } = indexSelectMore([fetchData1, fetchData2]);
-
-        const search = () => {
-            checkPathName('/home/placeedit');
-        }//searchFunction(selectTypes);
+        // PlaceManage.js
+        const LinkEditUrl = async (id) => {
+            if (id === 0) {
+                location.href ='/home/PlaceEdit';
+            }
+        }
 
         return {
             // Layout.js
-            registerComponent, showRegisterModel,
-            loginComponent, showLoginModel,
+            showRegisterModal, registerComponent,
+            loginComponent, showLoginModal,
             LoggedIn,
             Logouted,
 
-            // Index.js
-            fnChangeText,
-            selectTypes,
-            search,
-
+            // PlaceManage.js
+            LinkEditUrl
         }
     }
 };
