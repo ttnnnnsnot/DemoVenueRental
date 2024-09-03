@@ -17,7 +17,7 @@ const API = axios.create({
         "Content-Type": "application/json; charset=utf-8",
         Accept: "application/json",
     },
-    timeout: 500 // 設定 5 秒的超時時間
+    timeout: 800 // 設定 5 秒的超時時間
 });
 
 // 添加 request 攔截器
@@ -25,8 +25,7 @@ API.interceptors.request.use((config) => {
     // 這裡可以獲取請求方法
     if (config.method === 'post' || config.method === 'put' || config.method === 'delete')
     {
-        const token = document.querySelector('input[name="AntiforgeryToken"]').value;
-        config.headers["X-CSRF-TOKEN"] = token; // 添加 CSRF token 到標頭
+        config.headers["RequestVerificationToken"] = getCookie("RequestVerificationToken"); // 添加 CSRF token 到標頭
     }
 
     return config;
@@ -66,15 +65,15 @@ API.interceptors.response.use((response) => {
 });
 
 API.GET = async (url, params) => {
-        try {
-            const urlPath = getBaseUrl('api') + url;
-            const res = await API.get(urlPath, {
-                params,
-            });
-            return JSON.parse(res.data);
-        } catch (error) {
-            return handleApiError(error);
-        }
+    try {
+        const urlPath = getBaseUrl('api') + url;
+        const res = await API.get(urlPath, {
+            params,
+        });
+        return JSON.parse(res.data);
+    } catch (error) {
+        return handleApiError(error);
+    }
 }
 
 API.GetTemplate = async (url) => {
@@ -96,6 +95,9 @@ API.POST = async (url, ...arg) => {
     } catch (error) {
         return handleApiError(error);
     }
+    finally {
+        await API.GET('Token');
+    }
 }
 
 // 確認登入狀態
@@ -114,4 +116,20 @@ const getRole = async (role = "Admin") => {
     } catch (error) {
         return false;
     }
+}
+
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

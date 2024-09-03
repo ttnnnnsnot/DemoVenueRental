@@ -47,14 +47,9 @@
                     }
                 });
 
-                //const data = {
-                //    Email: email.value,
-                //    PasswordHash: passwordHash.value,
-                //    ConfirmPasswordHash: confirmPasswordHash.value,
-                //    LastName: lastName.value,
-                //    Name: name.value,
-                //    Phone: phone.value
-                //};
+                const config = {
+                    myToken: document.querySelector('#registerModalForm input[name="AntiforgeryToken"]').value
+                }
 
                 try {
                     const results = await API.POST("User/Register", data);

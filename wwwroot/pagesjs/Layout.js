@@ -19,17 +19,16 @@ const useRegister = () => {
         }
     };
 
-    const { checkPathName, onMounted: onMountedLoginSystem, listenerOnLogout } = loginStstem(showLoginModel);
-
     const isLoggedIn = ref(null);
+
+    const { checkPathName, onMounted: onMountedLoginSystem, listenerOnLogout } = loginStstem(showLoginModel, isLoggedIn);
 
     const Logout = async () => {
         try {
+            let Token = await API.POST('User/Logout', {});
             isLoggedIn.value = false;
-            return await API.GET('User/Logout');
         } catch (error) {
             console.log(error);
-            return false;
         }
     }
 
@@ -44,6 +43,9 @@ const useRegister = () => {
     }
 
     const onBeforeMount = async () => {
+
+        await API.GET('Token');
+
         if (!isEmptyObject(accessDenied)) {
             Alert.addDanger("您沒有權限!")
         }

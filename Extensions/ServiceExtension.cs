@@ -42,8 +42,9 @@ namespace DemoVenueRental.Extensions
             // 全域設定
             services.AddControllersWithViews(options =>
             {
+                // 添加全局防偽驗證
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            }).AddSessionStateTempDataProvider();
+            });
 
             // 設置 Serilog
             Log.Logger = new LoggerConfiguration()
@@ -80,12 +81,15 @@ namespace DemoVenueRental.Extensions
                     };
                 });
 
+
             // 設定AddAntiforgery驗証
-            services.AddAntiforgery(options =>
-            {
-                options.FormFieldName = "AntiforgeryToken";
-                options.HeaderName = "X-CSRF-TOKEN";
-            });
+            services.AddAntiforgery();
+            //// 設定AddAntiforgery驗証
+            //services.AddAntiforgery(options =>
+            //{
+            //    options.FormFieldName = "AntiforgeryToken";
+            //    options.HeaderName = "X-CSRF-TOKEN";
+            //});
         }
 
         private static Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)

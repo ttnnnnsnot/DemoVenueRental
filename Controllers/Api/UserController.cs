@@ -22,7 +22,7 @@ namespace DemoVenueRental.Controllers.Api
         }
 
         // GET: api/<DefController>/Logout
-        [HttpGet("Logout")]
+        [HttpPost("Logout")]
         public IActionResult Logout()
         {
             _userService.Logout();

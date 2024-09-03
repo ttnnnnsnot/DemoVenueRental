@@ -17,8 +17,10 @@ const appOption = {
     },
     setup() {
         // Layout.js
-        const { registerComponent, showRegisterModal,
-            loginComponent, showLoginModal,
+        const {
+            checkPathName,
+            registerComponent, showRegisterModel,
+            loginComponent, showLoginModel,
             Logouted,
             LoggedIn,
             LayoutonBeforeMount,
@@ -37,14 +39,14 @@ const appOption = {
         // PlaceManage.js
         const LinkEditUrl = async (id) => {
             if (id === 0) {
-                location.href ='/home/PlaceEdit';
+                checkPathName('/home/PlaceEdit');
             }
         }
 
         return {
             // Layout.js
-            showRegisterModal, registerComponent,
-            loginComponent, showLoginModal,
+            registerComponent, showRegisterModel,
+            loginComponent, showLoginModel,
             LoggedIn,
             Logouted,
 

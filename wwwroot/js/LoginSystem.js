@@ -1,4 +1,4 @@
-﻿const loginedSystem = (showLoginModel) => {
+﻿const loginedSystem = (showLoginModel, isLoggedIn) => {
     const roleAdminPages = ['/home/placeedit'].map(page => page.toLowerCase()); // 需要權限的頁面路徑
     const loginPages = ['/home/PlaceManage', ...roleAdminPages].map(page => page.toLowerCase()); // 需要登入的頁面路徑
 
@@ -18,7 +18,7 @@
     const listenerOnLogout = async () => {
         const loginModal = document.getElementById('loginModal');
         const onModalHidden = async function (event) {
-            if (!await IsLoggedIn()) {
+            if (!isLoggedIn.value) {
                 checkPathName("/");
             }
             loginModal.removeEventListener('hidden.bs.modal', onModalHidden);
