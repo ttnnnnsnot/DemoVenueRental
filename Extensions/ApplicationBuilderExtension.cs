@@ -2,7 +2,6 @@ using DemoVenueRental.Global;
 using DemoVenueRental.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DemoVenueRental.Extensions
 {

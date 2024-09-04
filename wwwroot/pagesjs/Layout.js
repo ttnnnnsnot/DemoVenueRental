@@ -46,7 +46,9 @@ const useRegister = () => {
 
         await API.GET('Token');
 
-        if (!isEmptyObject(accessDenied)) {
+        if (!isEmptyObject(noLogin)) {
+            showLoginModel();
+        }else if (!isEmptyObject(accessDenied)) {
             Alert.addDanger("您沒有權限!")
         }
     };

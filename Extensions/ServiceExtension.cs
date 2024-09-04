@@ -73,7 +73,7 @@ namespace DemoVenueRental.Extensions
                     options.ExpireTimeSpan = TimeSpan.FromDays(1);
                     options.SlidingExpiration = true;
                     options.AccessDeniedPath = "/Home/AccessDenied";
-                    options.LoginPath = "/";
+                    options.LoginPath = "/Home/NoLogined";
                     options.Events = new CookieAuthenticationEvents
                     {
                         OnRedirectToLogin = context => RedirectToLogin(context),
@@ -94,19 +94,10 @@ namespace DemoVenueRental.Extensions
 
         private static Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
         {
-            var refererUrl = context.Request.Headers["Referer"].ToString();
+            var uri = new Uri(context.RedirectUri);
+            var path = uri.GetLeftPart(UriPartial.Path); // 只保留路徑部分
 
-            // 確保 RefererUrl 是相對路徑
-            if(string.IsNullOrEmpty(refererUrl))
-            {
-                refererUrl = "/";
-            }
-            else if (Uri.TryCreate(refererUrl, UriKind.Absolute, out Uri? NewrefererUri))
-            {
-                refererUrl = NewrefererUri.PathAndQuery ?? "/";
-            }
-
-            context.Response.Redirect($"{context.RedirectUri}&RefererUrl={Uri.EscapeDataString(refererUrl)}");
+            context.Response.Redirect(path);
             return Task.CompletedTask;
         }
     }

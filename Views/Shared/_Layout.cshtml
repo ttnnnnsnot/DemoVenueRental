@@ -125,8 +125,7 @@
     </environment>
 
     <script>
-        const noLogin = JSON.parse('@Html.Raw(TempData["NoLogin"] ?? "{}")');
-        const loginedUrl = JSON.parse('@Html.Raw(TempData["LoginedUrl"] ?? "{}")');
+        const noLogin = JSON.parse('@Html.Raw(TempData["NoLogined"] ?? "{}")');
         const accessDenied = JSON.parse('@Html.Raw(TempData["AccessDenied"] ?? "{}")');
     </script>
 

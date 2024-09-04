@@ -17,7 +17,7 @@ const API = axios.create({
         "Content-Type": "application/json; charset=utf-8",
         Accept: "application/json",
     },
-    timeout: 800 // 設定 5 秒的超時時間
+    timeout: 1000 // 設定 1 秒的超時時間
 });
 
 // 添加 request 攔截器

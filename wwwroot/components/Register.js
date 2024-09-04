@@ -47,10 +47,6 @@
                     }
                 });
 
-                const config = {
-                    myToken: document.querySelector('#registerModalForm input[name="AntiforgeryToken"]').value
-                }
-
                 try {
                     const results = await API.POST("User/Register", data);
 

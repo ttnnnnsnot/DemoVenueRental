@@ -30,10 +30,16 @@ namespace DemoVenueRental.Controllers
             return View();
         }
 
-        public IActionResult AccessDenied(string RefererUrl)
+        public IActionResult NoLogined()
+        {
+            TempData["NoLogined"] = (new ResultData() { message = "請先行登入" }).ToSerialize();
+            return LocalRedirect("/");
+        }
+
+        public IActionResult AccessDenied()
         {
             TempData["AccessDenied"] = (new ResultData() { message = "您沒有權限" }).ToSerialize();
-            return LocalRedirect(RefererUrl);
+            return LocalRedirect("/");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
