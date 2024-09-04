@@ -1,13 +1,8 @@
 ﻿const registerOption = defineAsyncComponent(async () => {
     return {
         template: await API.GetTemplate("/Template/_Register"),
-        props: {
-            onLoggedIn: {
-                type: Function,
-                required: true
-            }
-        },
-        setup(props) {
+        setup() {
+            const performLoggedIn = inject('loggedIn');
             const email = ref('');
             const passwordHash = ref('');
             const confirmPasswordHash = ref('');
@@ -53,7 +48,7 @@
                     if (results && results.state) {
                         clear();
                         $("#registerModal").modal("hide");
-                        props.onLoggedIn();
+                        performLoggedIn();
                     } else {
                         errorMsg.value = results.errorMsg;
                         passwordHash.value = '';

@@ -1,46 +1,57 @@
 ﻿import { setupLayout, layoutOption } from '../pagesjs/Layout.js';
 
-import indexBannerOption from '../components/IndexBanner.js';
-import {
-    indexSelectTypeOption,
-    indexSelectMore,
-    search as searchFunction
-} from '../components/IndexSelectType.js';
-
 const appOption = {
     components: {
         // Layout.js
         ...layoutOption.components,
-        // Index.js
-        'index-select-type': indexSelectTypeOption,
-        'index-banner': indexBannerOption,
     },
     setup() {
         // Layout.js
-        const { registerComponent, showRegisterModal,
-            loginComponent, showLoginModal,
-            Logouted,
-            LoggedIn,
-            LayoutonBeforeMount,
-            LayoutonMounted,
-            headerCurrentState } = setupLayout();
+        const {
+            registerComponent,
+            loginComponent,
+            isLoggedIn,
+            layoutLogouted,
+            layoutLoggedIn,
+            layoutOnBeforeMount,
+            layoutOnMounted,
+            headerCurrentState,
+            checkPathName } = setupLayout();
 
         onBeforeMount(async () => {
-            await LayoutonBeforeMount();
+            await layoutOnBeforeMount();
         });
 
         onMounted(async () => {
-            await LayoutonMounted();
-            headerCurrentState.value = 3;
+            await layoutOnMounted();
             // PlaceEdit.js
+            changeHeaderState();
             const buttons = document.querySelectorAll('#nav-tab > .nav-link');
             activeTabList.value = Array.from(buttons).map(button => `#${button.id}`);
             document.querySelector(activeTabList.value[activeTab.value]).click();
         });
 
+        const performLoggedIn = async () => {
+            await layoutLoggedIn();
+
+            // PlaceManage.js
+            changeHeaderState();
+        }
+
+        const performLogouted = async () => {
+            await layoutLogouted();
+
+            // PlaceManage.js
+            changeHeaderState();
+        }
+
         // PlaceEdit.js
         const activeTabList = ref([]);
         const activeTab = ref(0);
+
+        const changeHeaderState = () => {
+            headerCurrentState.value = isLoggedIn.value ? 3 : 1;
+        }
 
         const sendForm = async () => {
             const forms = document.querySelectorAll('#PlaceEditTab form');
@@ -102,12 +113,14 @@ const appOption = {
             return myIndex;
         }
 
+        // Layout.js
+        provide('loggedIn', performLoggedIn);
+        provide('logouted', performLogouted);
+
         return {
             // Layout.js
-            showRegisterModal, registerComponent,
-            loginComponent, showLoginModal,
-            LoggedIn,
-            Logouted,
+            registerComponent,
+            loginComponent,
 
             // PlaceEdit.js
             nextDone,

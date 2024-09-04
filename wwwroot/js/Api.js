@@ -2,7 +2,7 @@
     return Promise.reject({ state: false, message: error.message });
 }
 
-// 獲取 API 基本 URL
+// 獲取基本 URL
 const getBaseUrl = (area) => {
     const protocol = `${location.protocol}//`;
     const host = location.hostname;
@@ -20,12 +20,17 @@ const API = axios.create({
     timeout: 1000 // 設定 1 秒的超時時間
 });
 
+API.csrfToken = null;
+
 // 添加 request 攔截器
-API.interceptors.request.use((config) => {
+API.interceptors.request.use(async (config) => {
     // 這裡可以獲取請求方法
     if (config.method === 'post' || config.method === 'put' || config.method === 'delete')
     {
-        config.headers["RequestVerificationToken"] = getCookie("RequestVerificationToken"); // 添加 CSRF token 到標頭
+        if (!API.csrfToken) {
+            await updateToken();
+        }
+        config.headers["RequestVerificationToken"] = API.csrfToken;
     }
 
     return config;
@@ -95,10 +100,17 @@ API.POST = async (url, ...arg) => {
     } catch (error) {
         return handleApiError(error);
     }
-    finally {
-        await API.GET('Token');
-    }
 }
+
+// 更新 CSRF token
+const updateToken = async () => {
+    try {
+        await API.GET('Token');
+        API.csrfToken = getCookie("RequestVerificationToken");
+    } catch (error) {
+        throw new Error('Failed to update CSRF token');
+    }
+};
 
 // 確認登入狀態
 const IsLoggedIn = async () => {
@@ -118,7 +130,7 @@ const getRole = async (role = "Admin") => {
     }
 }
 
-
+// 取得 Cookie
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

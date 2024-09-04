@@ -1,57 +1,69 @@
 ﻿import { setupLayout, layoutOption } from '../pagesjs/Layout.js';
 
-import indexBannerOption from '../components/IndexBanner.js';
-import {
-    indexSelectTypeOption,
-    indexSelectMore,
-    search as searchFunction
-} from '../components/IndexSelectType.js';
-
 const appOption = {
     components: {
         // Layout.js
         ...layoutOption.components,
-        // Index.js
-        'index-select-type': indexSelectTypeOption,
-        'index-banner': indexBannerOption,
     },
     setup() {
         // Layout.js
         const {
-            checkPathName,
-            registerComponent, showRegisterModel,
-            loginComponent, showLoginModel,
-            Logouted,
-            LoggedIn,
-            LayoutonBeforeMount,
-            LayoutonMounted,
-            headerCurrentState } = setupLayout();
+            registerComponent,
+            loginComponent,
+            isLoggedIn,
+            layoutLogouted,
+            layoutLoggedIn,
+            layoutOnBeforeMount,
+            layoutOnMounted,
+            headerCurrentState,
+            checkPathName } = setupLayout();
 
         onBeforeMount(async () => {
-            await LayoutonBeforeMount();
+            await layoutOnBeforeMount();
         });
 
         onMounted(async () => {
-            await LayoutonMounted();
-            headerCurrentState.value = 2;
+            await layoutOnMounted();
+            // PlaceManage.js
+            changeHeaderState();
         });
 
+        const performLoggedIn = async () => {
+            await layoutLoggedIn();
+
+            // PlaceManage.js
+            changeHeaderState();
+        }
+
+        const performLogouted = async () => {
+            await layoutLogouted();
+
+            // PlaceManage.js
+            changeHeaderState();
+        }
+
         // PlaceManage.js
-        const LinkEditUrl = async (id) => {
-            if (id === 0) {
-                checkPathName('/home/PlaceEdit');
+        const changeHeaderState = () => {
+            headerCurrentState.value = isLoggedIn.value ? 2 : 1;
+        }
+
+        const linkEditUrl = (id) => {
+            if (id == 0) {
+                checkPathName("/home/placeedit");
             }
         }
 
+        // Layout.js
+        provide('loggedIn', performLoggedIn);
+        provide('logouted', performLogouted);
+
         return {
             // Layout.js
-            registerComponent, showRegisterModel,
-            loginComponent, showLoginModel,
-            LoggedIn,
-            Logouted,
+            registerComponent,
+            loginComponent,
 
             // PlaceManage.js
-            LinkEditUrl
+            linkEditUrl
         }
     }
 };

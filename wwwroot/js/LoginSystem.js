@@ -1,5 +1,5 @@
-﻿const loginedSystem = (showLoginModel, isLoggedIn) => {
-    const roleAdminPages = ['/home/placeedit'].map(page => page.toLowerCase()); // 需要權限的頁面路徑
+﻿const loginedSystem = (isLoggedIn, isShowLoginModel) => {
+    const roleAdminPages = ['/home/PlaceEdit'].map(page => page.toLowerCase()); // 需要權限的頁面路徑
     const loginPages = ['/home/PlaceManage', ...roleAdminPages].map(page => page.toLowerCase()); // 需要登入的頁面路徑
 
     // 檢查當下頁面是否為需要登入的頁面
@@ -12,19 +12,22 @@
     }
 
     const onMounted = async () => {
+        checkPathName();
         await listenerLink();
     }
 
     const listenerOnLogout = async () => {
         const loginModal = document.getElementById('loginModal');
-        const onModalHidden = async function (event) {
-            if (!isLoggedIn.value) {
-                checkPathName("/");
-            }
-            loginModal.removeEventListener('hidden.bs.modal', onModalHidden);
-        };
+        if (loginModal) {
+            const onModalHidden = async function (event) {
+                if (!isLoggedIn.value) {
+                    checkPathName("/");
+                }
+                loginModal.removeEventListener('hidden.bs.modal', onModalHidden);
+            };
 
-        loginModal.addEventListener('hidden.bs.modal', onModalHidden);
+            loginModal.addEventListener('hidden.bs.modal', onModalHidden);
+        }
     }
 
     const checkPathName = async (pathName) => {
@@ -40,11 +43,12 @@
         }
 
         // 如果是登入頁面，且未登入，則阻止默認事件，重新啟動登入頁面 
-        if (isLoginPage(pathName) && !await IsLoggedIn()) {
-            showLoginModel();
-        } else if (isRoleAdminPage(pathName) && !await getRole("Admin")) {
+        if (isLoginPage(pathName) && !isLoggedIn.value) {
+            listenerOnLogout();
+            isShowLoginModel.value = true;
+        } else if (isRoleAdminPage(pathName) && !await getRole("User")) {
             Alert.addDanger('您沒有權限訪問此頁面');
-        } else {
+        } else if (pathName != window.location.pathname.toLowerCase()) {
             window.location.href = window.location.origin + pathName;
         }
     }
@@ -62,8 +66,7 @@
 
     return {
         checkPathName,
-        onMounted,
-        listenerOnLogout
+        onMounted
     }
 }
 

@@ -1,4 +1,5 @@
-﻿const loginModel = (props) => {
+﻿const loginModel = () => {
+    const performLoggedIn = inject('loggedIn');
     const email = ref('');
     const passwordHash = ref('');
     const errorMsg = ref('');
@@ -30,7 +31,7 @@
             if (results && results.state) {
                 clear();
                 $("#loginModal").modal("hide");
-                props.onLoggedIn();
+                performLoggedIn();
             } else {
                 errorMsg.value = results.message;
                 passwordHash.value = '';
@@ -54,20 +55,14 @@
 const loginOption = defineAsyncComponent(async () => {
     return {
         template: await API.GetTemplate("/Template/_Login"),
-        props: {
-            onLoggedIn: {
-                type: Function,
-                required: true
-            }
-        },
-        setup(props) {
+        setup() {
             const {
                 email,
                 passwordHash,
                 login,
                 showModel,
                 errorMsg
-            } = loginModel(props);
+            } = loginModel();
 
             return {
                 email,

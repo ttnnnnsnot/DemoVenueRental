@@ -19,53 +19,74 @@ const useRegister = () => {
         }
     };
 
+    const isShowLoginModel = ref(null);
     const isLoggedIn = ref(null);
 
-    const { checkPathName, onMounted: onMountedLoginSystem, listenerOnLogout } = loginStstem(showLoginModel, isLoggedIn);
+    const { checkPathName, onMounted: onMountedLoginSystem } = loginStstem(isLoggedIn, isShowLoginModel);
 
-    const Logout = async () => {
+    const logout = async () => {
         try {
-            let Token = await API.POST('User/Logout', {});
-            isLoggedIn.value = false;
+            await API.POST('User/Logout', {});
         } catch (error) {
             console.log(error);
+        } finally {
+            isLoggedIn.value = false;
+            API.csrfToken = null;
         }
     }
 
-    const Logouted = async () => {
-        await Logout();
+    const logouted = async () => {
+        await logout();
         checkPathName();
-        await listenerOnLogout();
     }
 
-    const LoggedIn = async () => {
+    const loggedIn = async () => {
         isLoggedIn.value = await IsLoggedIn();
+        API.csrfToken = null;
     }
 
     const onBeforeMount = async () => {
-
-        await API.GET('Token');
-
-        if (!isEmptyObject(noLogin)) {
-            showLoginModel();
-        }else if (!isEmptyObject(accessDenied)) {
+        if (!isEmptyObject(accessDenied)) {
             Alert.addDanger("您沒有權限!")
         }
     };
 
     const onMounted = async () => {
-        await nextTick();
-        isLoggedIn.value = await IsLoggedIn();
+        try {
+            await waitForDOMLoad();
+        } catch (error) {
+            console.error('DOM load error:', error);
+        }
+        isLoggedIn.value = await IsLoggedIn();        
         await onMountedLoginSystem();
     };
+
+    // 監聽 isShowLoginModel 的變化
+    watch(isShowLoginModel, (newVal) => {
+        if (newVal && loginComponent.value) {
+            showLoginModel();
+            isShowLoginModel.value = false;
+        }
+    });
+
+    // 監聽 loginComponent 的變化
+    watch(loginComponent, (newVal) => {
+        if (!isEmptyObject(noLogin)) {
+            showLoginModel();
+        } else if (newVal && isShowLoginModel.value) {
+            showLoginModel();
+            isShowLoginModel.value = false;
+        }
+    });
 
     return {
         registerComponent, showRegisterModel,
         loginComponent, showLoginModel,
 
         isLoggedIn,
-        Logouted,
-        LoggedIn,
+        isShowLoginModel,
+        logouted,
+        loggedIn,
 
         onBeforeMount,
         onMounted,
@@ -83,37 +104,33 @@ export const setupLayout = () => {
         loginComponent, showLoginModel,
 
         isLoggedIn,
-        Logouted,
-        LoggedIn,
+        logouted : layoutLogouted,
+        loggedIn : layoutLoggedIn,
 
-        onBeforeMount: LayoutonBeforeMount,
-        onMounted: LayoutonMounted } = useRegister();
+        onBeforeMount: layoutOnBeforeMount,
+        onMounted: layoutOnMounted
+    } = useRegister();
 
-    const headerCurrentState = ref(1);
-
-    watch(loginComponent, (newVal) => {
-        if (!isEmptyObject(noLogin)) {
-            showLoginModel();
-        }
-    });
+    const headerCurrentState = ref(null);
 
     provide('isLoggedIn', isLoggedIn);
     provide('currentState', headerCurrentState);
 
-    provide('Logouted', Logouted);
     provide('showRegisterModel', showRegisterModel);
     provide('showLoginModel', showLoginModel);
 
     provide('checkPathName', checkPathName);
 
     return {
-        registerComponent, showRegisterModel,
-        loginComponent, showLoginModel,
+        registerComponent,
+        loginComponent,
 
-        LoggedIn, Logouted,
+        isLoggedIn,
+        layoutLogouted,
+        layoutLoggedIn,
 
-        LayoutonBeforeMount,
-        LayoutonMounted,
+        layoutOnBeforeMount,
+        layoutOnMounted,
 
         headerCurrentState,
 

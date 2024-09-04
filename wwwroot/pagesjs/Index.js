@@ -16,28 +16,52 @@ const appOption = {
         'index-banner': indexBannerOption,
     },
     setup() {
-        const instance = getCurrentInstance();
         // Layout.js
         const { 
-            checkPathName,
-            registerComponent, showRegisterModel,
-            loginComponent, showLoginModel,
-            Logouted,
-            LoggedIn,
-            LayoutonBeforeMount,
-            LayoutonMounted,
-            headerCurrentState } = setupLayout();
+            registerComponent,
+            loginComponent,
+            isLoggedIn,
+            layoutLogouted,
+            layoutLoggedIn,
+            layoutOnBeforeMount,
+            layoutOnMounted,
+            headerCurrentState,
+            checkPathName } = setupLayout();
 
         onBeforeMount(async () => {
-            await LayoutonBeforeMount();
+            await layoutOnBeforeMount();
+
+            // index.js
             await indexSelectMoreonBeforeMount();
         });
 
         onMounted(async () => {
-            await LayoutonMounted();
+            await layoutOnMounted();
+
+            // index.js
+            changeHeaderState();
         });
 
+        const performLoggedIn = async () => {
+            await layoutLoggedIn();
+
+            // Index.js
+            changeHeaderState();
+        }
+
+        const performLogouted = async () => {
+            await layoutLogouted();
+
+            // Index.js
+            changeHeaderState();
+        }
+
         // Index.js
+        const changeHeaderState = () => {
+            headerCurrentState.value = isLoggedIn.value ? 2 : 1;
+        }
+
+
         const fetchData1 = () => API.GET('def/sport');
         const fetchData2 = () => API.GET('def/area');
 
@@ -47,16 +71,16 @@ const appOption = {
             onBeforeMount: indexSelectMoreonBeforeMount
         } = indexSelectMore([fetchData1, fetchData2]);
 
-        const search = () => {
-            checkPathName('/home/placeedit');
-        }//searchFunction(selectTypes);
+        const search = () => searchFunction(selectTypes);
+
+        // Layout.js
+        provide('loggedIn', performLoggedIn);
+        provide('logouted', performLogouted);
 
         return {
             // Layout.js
-            registerComponent, showRegisterModel,
-            loginComponent, showLoginModel,
-            LoggedIn,
-            Logouted,
+            registerComponent,
+            loginComponent,
 
             // Index.js
             fnChangeText,
