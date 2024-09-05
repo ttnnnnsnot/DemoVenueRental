@@ -31,16 +31,11 @@
                 if (!$("#registerModalForm").valid())
                     return;
 
-                const form = document.getElementById('registerModalForm');
-                const formData = new FormData(form);
+                const formData = new FormData(document.getElementById('registerModalForm'));
 
-                const data = {};
-                formData.forEach((value, key) => {
-                    let keyreplace = key.replace('Register.', '');
-                    if (keyreplace !== 'AntiforgeryToken') { // 排除不需要的欄位
-                        data[keyreplace] = value;
-                    }
-                });
+                const data = Object.fromEntries(
+                    Array.from(formData.entries()).map(([key, value]) => [key.replace('Register.', ''), value])
+                );
 
                 try {
                     const results = await API.POST("User/Register", data);

@@ -87,4 +87,3 @@ const getVueGlobal = (instance) => {
     const globalProperties = instance.appContext.config.globalProperties;
     return globalProperties.$Model;
 };
-

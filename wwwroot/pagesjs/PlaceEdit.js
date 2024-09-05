@@ -26,9 +26,8 @@ const appOption = {
             await layoutOnMounted();
             // PlaceEdit.js
             changeHeaderState();
-            const buttons = document.querySelectorAll('#nav-tab > .nav-link');
-            activeTabList.value = Array.from(buttons).map(button => `#${button.id}`);
-            document.querySelector(activeTabList.value[activeTab.value]).click();
+            setActiveTabList();
+            changeTab(activeTab.value);
         });
 
         const performLoggedIn = async () => {
@@ -49,6 +48,33 @@ const appOption = {
         const activeTabList = ref([]);
         const activeTab = ref(0);
 
+        const setActiveTabList = () => {
+            const buttons = document.querySelectorAll('#nav-tab > .nav-link');
+            activeTabList.value = Array.from(buttons).map(button => `#${button.id}`);
+        };
+
+        const changeTab = (index) => {
+            if (index !== undefined && activeTabList.value.length > index && index >= 0)
+            {
+                activeTab.value = index;
+            }
+            document.querySelector(activeTabList.value[activeTab.value]).click();
+        }
+
+        const nextDone = async () => {
+            if (await sendForm()) {
+                if (activeTab.value < activeTabList.value.length - 1) {
+                    changeTab(++activeTab.value);
+                }
+            }
+        }
+
+        const upDone = () => {
+            if (activeTab.value > 0) {
+                changeTab(--activeTab.value);
+            }
+        }
+
         const changeHeaderState = () => {
             headerCurrentState.value = isLoggedIn.value ? 3 : 1;
         }
@@ -59,58 +85,21 @@ const appOption = {
 
             if (!$(thisform).valid())
                 return false;
-
+            
             const formData = new FormData(thisform);
 
-            const data = {};
-            formData.forEach((value, key) => {
-                let keyreplace = key.replace('PlaceInfo.', '');
-                if (keyreplace !== 'AntiforgeryToken') { // 排除不需要的欄位
-                    data[keyreplace] = value;
-                }
-            });
+            const data = Object.fromEntries(
+                Array.from(formData.entries())
+            );
 
             try {
                 const results = await API.POST("Place", data);
-                console.log(results)
-                Alert.addDanger(results);
-                return true;
+                return results.state;
 
             } catch (error) {
                 console.log('Error:', error);
                 return false;
             }
-        }
-
-
-        const nextDone = async () => {
-            if (await sendForm()) {
-                activeTab.value = getIndex();
-                if (activeTab.value < activeTabList.value.length - 1) {
-                    activeTab.value++;
-                    document.querySelector(activeTabList.value[activeTab.value]).click();
-                }
-            }
-        }
-
-        const upDone = () => {
-            activeTab.value = getIndex();
-            if (activeTab.value > 0) {
-                activeTab.value--;
-                document.querySelector(activeTabList.value[activeTab.value]).click();
-            }
-        }
-
-        const getIndex = () => {
-            const buttons = document.querySelectorAll('#nav-tab > .nav-link');
-            let myIndex = 0;
-            buttons.forEach((button, index) => {
-                if (button.classList.contains('active')) {
-                    myIndex = index;
-                }
-            });
-
-            return myIndex;
         }
 
         // Layout.js

@@ -20,10 +20,11 @@
         if (!$("#loginModalForm").valid())
             return;
 
-        const data = {
-            Email: email.value,
-            PasswordHash: passwordHash.value
-        };
+        const formData = new FormData(document.getElementById('loginModalForm'));
+
+        const data = Object.fromEntries(
+            Array.from(formData.entries()).map(([key, value]) => [key.replace('Login.', ''), value])
+        );
 
         try {
             const results = await API.POST("User/Login", data);

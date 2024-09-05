@@ -19,17 +19,15 @@
                     </div>
                     <div class="col-4">
                         <div class="form-floating">
-                            <select class="form-control" asp-for="PlaceInfo.CityName">
+                            <select class="form-control" asp-for="PlaceInfo.CityId">
                                 <option value="" disabled>場所地址</option>
                                 <option value="1" selected>台北市</option>
                                 <option value="2">新北市</option>
                                 <option value="3">桃園市</option>
                                 <option value="4">台中市</option>
-                                <option value="5">台南市</option>
-                                <option value="6">高雄市</option>
                             </select>
-                            <label asp-for="PlaceInfo.CityName">場所地址</label>
-                            <span asp-validation-for="PlaceInfo.CityName" class="text-danger"></span>
+                            <label asp-for="PlaceInfo.CityId">場所地址</label>
+                            <span asp-validation-for="PlaceInfo.CityId" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-8">
@@ -62,9 +60,7 @@
                 <div class="row gy-4">
                     <div class="col">
                         <div class="form-floating">
-                            <input type="text" class="form-control" placeholder="name@example.com2222" asp-for="PlaceInfoType.PlaceId">
-                            <label asp-for="PlaceInfoType.PlaceId">Email address222</label>
-                            <span asp-validation-for="PlaceInfoType.PlaceId" class="text-danger"></span>
+                            
                         </div>
                     </div>
                     <div class="col-12 d-flex justify-content-between">

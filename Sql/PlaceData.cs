@@ -29,17 +29,17 @@ namespace DemoVenueRental.Sql
                 try
                 {
                     var sql = @"
-                        INSERT INTO PlaceInfo ([UserId], [Name], [CityName], [Address], [Describe], [Rules], [Opening], [StateId])
-                            VALUES (@UserId, @Name, @CityName, @Address, @Describe, @Rules, @Opening, @StateId);
+                        INSERT INTO PlaceInfo ([UserId], [Name], [CityId], [Address], [Describe], [Rules], [Opening], [StateId])
+                            VALUES (@UserId, @Name, @CityId, @Address, @Describe, @Rules, @Opening, @StateId);
                         SELECT CAST(SCOPE_IDENTITY() AS INT);
                         ";
 
                     var param = new
                     {
                         placeInfo.UserId,
-                        Name = placeInfo.Name.ToNVarchar(30),
-                        CityName = placeInfo.CityName.ToNChar(4),
-                        Address = placeInfo.Address.ToNVarchar(100),
+                        Name = (placeInfo.Name ?? string.Empty).ToNVarchar(30),
+                        placeInfo.CityId,
+                        Address = (placeInfo.Address ?? string.Empty).ToNVarchar(100),
                         Describe = placeInfo.Describe.ToNVarchar(),
                         Rules = placeInfo.Rules.ToNVarchar(),
                         placeInfo.Opening,
