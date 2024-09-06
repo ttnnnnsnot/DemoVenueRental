@@ -102,6 +102,26 @@ API.POST = async (url, ...arg) => {
     }
 }
 
+API.PUT = async (url, ...arg) => {
+    try {
+        const urlPath = getBaseUrl('api') + url;
+        const res = await API.put(urlPath, ...arg);
+        return JSON.parse(res.data);
+    } catch (error) {
+        return handleApiError(error);
+    }
+}
+
+API.DELETE = async (url, ...arg) => {
+    try {
+        const urlPath = getBaseUrl('api') + url;
+        const res = await API.delete(urlPath, ...arg);
+        return JSON.parse(res.data);
+    } catch (error) {
+        return handleApiError(error);
+    }
+}
+
 // 更新 CSRF token
 const updateToken = async () => {
     try {

@@ -28,8 +28,27 @@ export const indexSelectTypeOption = defineAsyncComponent(async () => {
 export const indexSelectMore = (ArrayFunction) => {
     const selectTypes = reactive([]);
 
-    for (const fetchData of ArrayFunction) {
-        selectTypes.push({ data: {}, fetchData });
+    const setDefaultConfig = (config) => {
+        let data = {};
+        if (config === "sport") {
+            data = {
+                iconClass: 'fa-solid fa-medal',   //圖標class
+                defaultText: '選擇運動', //預設文字
+                listItem: []
+            };
+        }
+        else if (config === "area") {
+            data = {
+                iconClass: 'fa-solid fa-map-pin',   //圖標class
+                defaultText: '選擇地區', //預設文字
+                listItem: []
+            };
+        }
+        return data;
+    }
+
+    for (const { fetchData, config } of ArrayFunction) {
+        selectTypes.push({ data: setDefaultConfig(config), fetchData });
     }
 
     const fnChangeText = (index, text) => {
@@ -41,7 +60,7 @@ export const indexSelectMore = (ArrayFunction) => {
             try {
                 const res = await type.fetchData();
                 if (res) {
-                    Object.assign(type.data, res.data);
+                    Object.assign(type.data.listItem, res.data);
                 }
             } catch (error) {
                 console.log(error);

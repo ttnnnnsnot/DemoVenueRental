@@ -46,6 +46,7 @@ const useRegister = () => {
     }
 
     const onBeforeMount = async () => {
+        await updateToken();
         if (!isEmptyObject(accessDenied)) {
             Alert.addDanger("您沒有權限!")
         }

@@ -12,19 +12,17 @@
                 <div class="row gy-4">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" placeholder="場所名稱" asp-for="PlaceInfo.Name">
+                            <input type="text" v-model="placeInfo.placeInfo.name" class="form-control" placeholder="場所名稱" asp-for="PlaceInfo.Name">
                             <label asp-for="PlaceInfo.Name">場所名稱</label>
                             <span asp-validation-for="PlaceInfo.Name" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-floating">
-                            <select class="form-control" asp-for="PlaceInfo.CityId">
+                            <select class="form-control"
+                            v-model="placeInfo.placeInfo.cityId" asp-for="PlaceInfo.CityId">
                                 <option value="" disabled>場所地址</option>
-                                <option value="1" selected>台北市</option>
-                                <option value="2">新北市</option>
-                                <option value="3">桃園市</option>
-                                <option value="4">台中市</option>
+                                <option v-for="(item, index) in areaList" :key="index" :value="item.selectTypeId">{{ item.name }}</option>
                             </select>
                             <label asp-for="PlaceInfo.CityId">場所地址</label>
                             <span asp-validation-for="PlaceInfo.CityId" class="text-danger"></span>
@@ -32,22 +30,18 @@
                     </div>
                     <div class="col-8">
                         <div class="form-floating">
-                            <input type="text" class="form-control" placeholder="場所地址" asp-for="PlaceInfo.Address">
+                            <input type="text" v-model="placeInfo.placeInfo.address" class="form-control" placeholder="場所地址" asp-for="PlaceInfo.Address">
                             <label asp-for="PlaceInfo.Address">場所地址</label>
                             <span asp-validation-for="PlaceInfo.Address" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="form-floating">
-                            <textarea class="form-control" placeholder="場地介紹" style="height: 100px" asp-for="PlaceInfo.Describe"></textarea>
-                            <label asp-for="PlaceInfo.Describe">場地介紹</label>
-                        </div>
+                        <label class="form-text">場地介紹</label>
+                        <textarea v-model="placeInfo.placeInfo.describe" class="form-control" style="height: 100px" asp-for="PlaceInfo.Describe"></textarea>
                     </div>
                     <div class="col-12">
-                        <div class="form-floating">
-                            <textarea class="form-control" placeholder="場地規則" style="height: 100px" asp-for="PlaceInfo.Rules"></textarea>
-                            <label asp-for="PlaceInfo.Rules">場地規則</label>
-                        </div>
+                        <label class="form-text">場地規則</label>
+                        <textarea v-model="placeInfo.placeInfo.rules" class="form-control" style="height: 100px" asp-for="PlaceInfo.Rules"></textarea>
                     </div>
                     <div class="col-12 d-flex justify-content-end">
                         <button type="button" v-on:click="nextDone" class="btn btn-primary">下一步</button>
@@ -59,8 +53,12 @@
             <form class="container-fluid" method="post">
                 <div class="row gy-4">
                     <div class="col">
-                        <div class="form-floating">
-                            
+                        <div class="form-check form-check-inline form-control-lg" v-for="(item, index) in sportList" :key="index">
+                            <input class="form-check-input" type="checkbox" :value="item.selectTypeId" v-model="sportTypeList" :id="'checkbox-' + index">
+                            <label class="form-check-label" :for="'checkbox-' + index">{{ item.name }}</label>
+                        </div>
+                        <div>
+                            <span class="text-danger">{{sportTypeMessage}}</span>
                         </div>
                     </div>
                     <div class="col-12 d-flex justify-content-between">

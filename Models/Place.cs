@@ -4,6 +4,7 @@ namespace DemoVenueRental.Models
 {
     public class PlaceInfo
     {
+        public int PlaceId { get; set; }
         public int UserId { get; set; }
 
         [MaxLength(30, ErrorMessage = "最多輸入30個字")]
@@ -17,16 +18,14 @@ namespace DemoVenueRental.Models
         public bool Opening { get; set; }
         public byte StateId { get; set; } = 1;
     }
-    public class PlaceInfoType
+    public class PlaceType
     {
-        public int PlaceId { get; set; }
-        public byte TypeId { get; set; }
+        public int SelectTypeId { get; set; }
     }
     public class PlaceImg
     {
         public string PlaceImgId { get; set; } = string.Empty;
-        public int PlaceId { get; set; }
         public string imgUrl { get; set; } = string.Empty;
-        public byte OrderNum { get; set; }
+        public int OrderNum { get; set; }
     }
 }

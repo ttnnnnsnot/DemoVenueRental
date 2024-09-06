@@ -11,6 +11,8 @@ namespace DemoVenueRental.Extensions
         {
             // 配置 CookieExtension
             var httpContextAccessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
+
+            // 配置 BaseCookie
             BaseCookie.Configure(httpContextAccessor);
 
             // 建立API的錯誤處理回應

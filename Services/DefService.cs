@@ -6,7 +6,7 @@ namespace DemoVenueRental.Services
 {
     public interface IDefService
     {
-        Task<string> GetDef(string typeName);
+        Task<ResultData<List<SelectType>>> GetDef(string typeName);
     }
 
     public class DefService : IDefService
@@ -18,33 +18,13 @@ namespace DemoVenueRental.Services
             _defData = defData;
         }
 
-        public async Task<string> GetDef(string typeName)
+        public async Task<ResultData<List<SelectType>>> GetDef(string typeName)
         {
-            var resultData = new ResultData<SelectType>();
-            var def = new SelectType();
-            def.listItem = await _defData.GetSelectData(typeName);
+            var result = new ResultData<List<SelectType>>();
 
-            if (def.listItem.Count == 0)
-            {
-                resultData.state = false;
-                resultData.message = "查無資料";
-                return resultData.ToSerialize();
-            }
+            result = await _defData.GetData(typeName);
 
-            if (typeName == "sport")
-            {
-                def.defaultText = "選擇項目";
-                def.iconClass = "fa-solid fa-medal";
-            }
-            else
-            {
-                def.defaultText = "選擇地區";
-                def.iconClass = "fa-solid fa-map-pin";
-            }
-
-            resultData.data = def;
-            resultData.state = true;
-            return resultData.ToSerialize();
+            return result;
         }
     }
 }

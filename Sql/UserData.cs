@@ -40,52 +40,42 @@ namespace DemoVenueRental.Sql
                 result.message = "Email已存在";
                 return result;
             }
-
-            using (var transaction = _connection.BeginTransaction())
+                        
+            try
             {
-                try
+                var sql = @"
+                    INSERT INTO Users (Email, PasswordHash, LastName, Name, Phone)
+                        VALUES (@Email, @PasswordHash, @LastName, @Name, @Phone);
+                    SELECT CAST(SCOPE_IDENTITY() AS INT);
+                    ";
+
+                var param = new
                 {
-                    var sql = @"
-                        INSERT INTO Users (Email, PasswordHash, LastName, Name, Phone)
-                            VALUES (@Email, @PasswordHash, @LastName, @Name, @Phone);
-                        SELECT CAST(SCOPE_IDENTITY() AS INT);
-                        ";
+                    Email = model.Email.ToNVarchar(100),
+                    PasswordHash = hashedPassword.ToVarchar(80),
+                    LastName = model.LastName.ToNVarchar(30),
+                    Name = model.Name.ToNVarchar(30),
+                    Phone = model.Phone.ToChar(10),
+                };
 
-                    var param = new
-                    {
-                        Email = model.Email.ToNVarchar(100),
-                        PasswordHash = hashedPassword.ToVarchar(80),
-                        LastName = model.LastName.ToNVarchar(30),
-                        Name = model.Name.ToNVarchar(30),
-                        Phone = model.Phone.ToChar(10),
-                    };
-
-                    var userId = await _connection.ExecuteScalarAsync<int>(sql, param, transaction);
+                var userId = await _connection.ExecuteScalarAsync<int>(sql, param);
                 
-                    if (userId == 0)
-                    {
-                        result.message = "註冊失敗";
-                        transaction.Rollback();
-                        return result;
-                    }
-
-                    result.state = true;
-                    result.data = userId;
-
-                    transaction.Commit();
-                    return result;
-                }
-                catch (Exception ex)
+                if (userId == 0)
                 {
-                    transaction.Rollback();
                     result.message = "註冊失敗";
-                    LoggerService.LogError(result.message, ex);
                     return result;
                 }
-                finally
-                {
-                    transaction.Dispose();
-                }
+
+                result.state = true;
+                result.data = userId;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.message = "註冊失敗";
+                LoggerService.LogError(result.message, ex);
+                return result;
             }
         }
 
@@ -93,49 +83,65 @@ namespace DemoVenueRental.Sql
         {
             ResultData<int> result = new ResultData<int>();
 
-            var sql = @"
+            try
+            {
+                var sql = @"
                 SELECT UserId, Email, PasswordHash
                 FROM Users
-                WHERE Email = @Email
-            ";
+                WHERE Email = @Email";
 
-            var param = new
-            {
-                Email = model.Email.ToNVarchar(100)
-            };
+                var param = new
+                {
+                    Email = model.Email.ToNVarchar(100)
+                };
 
-            var user = await _connection.QueryFirstOrDefaultAsync<UserLoginResult>(sql, param);
+                var user = await _connection.QueryFirstOrDefaultAsync<UserLoginResult>(sql, param);
 
-            if (user == null)
-            {
-                result.message = "Email不存在";
+                if (user == null)
+                {
+                    result.message = "Email不存在";
+                    return result;
+                }
+
+                if (!model.PasswordHash.ToVerify(user.PasswordHash))
+                {
+                    result.message = "密碼錯誤";
+                    return result;
+                }
+
+                result.state = true;
+                result.data = user.UserId;
                 return result;
             }
-
-            if (!model.PasswordHash.ToVerify(user.PasswordHash))
+            catch (Exception ex)
             {
-                result.message = "密碼錯誤";
+                result.message = "登入失敗";
+                LoggerService.LogError(result.message, ex);
                 return result;
             }
-
-            result.state = true;
-            result.data = user.UserId;
-            return result;
         }
 
         public async Task<bool> IsEmailExist(string Email)
         {
-            var sql = @"
+            try
+            {
+                var sql = @"
                 SELECT CASE WHEN EXISTS (
                     SELECT 1 FROM Users WHERE Email = @Email
                 ) THEN 1 ELSE 0 END           
                  ";
 
-            var param = new
+                var param = new
+                {
+                    Email = Email.ToNVarchar(100)
+                };
+                return await _connection.ExecuteScalarAsync<int>(sql, param) > 0;
+            }
+            catch (Exception ex)
             {
-                Email = Email.ToNVarchar(100)
-            };
-            return await _connection.ExecuteScalarAsync<int>(sql, param) > 0;
+                LoggerService.LogError("檢查Email是否存在失敗", ex);
+                return true;
+            }            
         }
     }
 }

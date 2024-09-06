@@ -47,8 +47,9 @@ const appOption = {
             headerCurrentState.value = isLoggedIn.value ? 2 : 1;
         }
 
-        const linkEditUrl = (id) => {
+        const linkEditUrl = async (id) => {
             if (id == 0) {
+                await API.DELETE('Place/PlaceId');
                 checkPathName("/home/placeedit");
             }
         }

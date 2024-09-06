@@ -20,6 +20,7 @@ const appOption = {
 
         onBeforeMount(async () => {
             await layoutOnBeforeMount();
+            await getAreaList();
         });
 
         onMounted(async () => {
@@ -28,6 +29,9 @@ const appOption = {
             changeHeaderState();
             setActiveTabList();
             changeTab(activeTab.value);
+            listenerButtons();
+            await getPlaceInfo();
+            await getSportList();
         });
 
         const performLoggedIn = async () => {
@@ -45,8 +49,61 @@ const appOption = {
         }
 
         // PlaceEdit.js
+        const placeId = ref(0);
         const activeTabList = ref([]);
-        const activeTab = ref(0);
+        const activeTab = ref(1);
+        const placeInfo = ref({
+            placeInfo: {
+                name: '',
+                cityId: 1,
+                address: '',
+                describe: '',
+                rules: ''
+            },
+            placeImg: [],
+            placeType: [],
+        });
+
+        const sportTypeList = ref([]);
+        const sportTypeMessage = ref('');
+
+        const areaList = ref([]);
+
+        const getAreaList = async () => {
+            const result = await API.GET('Def/area');
+            if (result.state) {
+                areaList.value = result.data;
+            }
+        }
+
+        const sportList = ref([]);
+
+        const getSportList = async () => {
+            const result = await API.GET('Def/sport');
+            if (result.state) {
+                sportList.value = result.data;
+            }
+        }
+
+        const getPlaceInfo = async () => {
+            const results = await API.GET(`Place/PlaceInfo`);
+            if (results.state) {
+                placeInfo.value = results.data;
+
+                sportTypeList.value = placeInfo.value.placeType.map(item => item.selectTypeId);
+                placeId.value = placeInfo.value.placeInfo.placeId;
+            }
+        }
+
+        const listenerButtons = () => {
+            // 監聽 #nav-tab > .nav-link 的按鈕，並且設定 activeTabList
+            const buttons = document.querySelectorAll('#nav-tab > .nav-link');
+            buttons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    activeTab.value = index;
+                });
+            });
+        }
 
         const setActiveTabList = () => {
             const buttons = document.querySelectorAll('#nav-tab > .nav-link');
@@ -83,17 +140,73 @@ const appOption = {
             const forms = document.querySelectorAll('#PlaceEditTab form');
             const thisform = forms[activeTab.value];
 
+            if (activeTab.value === 0) {
+                return await SendPlace(thisform);
+            } else if (placeId.value === 0) {
+                await SendPlace(forms[0]);
+            }
+
+            if (placeId.value === 0) {
+                Alert.addDanger("資訊有誤，請更新場所資訊，再進行下一步");
+                return false;
+            }
+
+            if (activeTab.value === 1) {
+                return await SendSportType(thisform);
+            }
+            
+        }
+
+        const SendSportType = async (thisform) => {
+            
+            if (sportTypeList.value.length === 0) {
+                return false;
+            }
+
+            const data = sportTypeList.value;
+
+            try {
+                const results = await API.PUT("Place/SportType", data);
+
+                if (!results.state) {
+                    Alert.addDanger(results.message);
+                    return false;
+                }
+
+                return true;
+            } catch (error) {
+                console.log('Error:', error);
+                return false;
+            }
+        }
+
+        // 監聽 sportTypeList 的變化
+        watch(sportTypeList, (newVal) => {
+            if (newVal.length === 0) {
+                sportTypeMessage.value = '請至少選擇一個運動類型';
+            } else {
+                sportTypeMessage.value = '';
+            }
+        });
+        
+
+        const SendPlace = async (thisform) => {
             if (!$(thisform).valid())
                 return false;
-            
+
             const formData = new FormData(thisform);
 
             const data = Object.fromEntries(
-                Array.from(formData.entries())
+                Array.from(formData.entries()).map(([key, value]) => [key.replace('PlaceInfo.',''), value])
             );
 
             try {
-                const results = await API.POST("Place", data);
+                const results = placeId.value === 0 ? await API.POST("Place", data) : await API.PUT("Place", data);
+                    
+                if (results.state)
+                    placeId.value = results.data.placeId;
+                else
+                    Alert.addDanger(results.message);
                 return results.state;
 
             } catch (error) {
@@ -113,7 +226,13 @@ const appOption = {
 
             // PlaceEdit.js
             nextDone,
-            upDone
+            upDone,
+            placeInfo,
+            areaList,
+
+            sportList,
+            sportTypeList,
+            sportTypeMessage
         }
     }
 };

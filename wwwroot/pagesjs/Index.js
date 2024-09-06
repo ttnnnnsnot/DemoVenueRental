@@ -69,7 +69,9 @@ const appOption = {
             selectTypes,
             fnChangeText,
             onBeforeMount: indexSelectMoreonBeforeMount
-        } = indexSelectMore([fetchData1, fetchData2]);
+        } = indexSelectMore([
+            { fetchData: fetchData1, config: "sport" },
+            { fetchData: fetchData2, config: "area" }]);
 
         const search = () => searchFunction(selectTypes);
 

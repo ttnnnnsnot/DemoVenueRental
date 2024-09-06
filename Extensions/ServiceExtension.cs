@@ -84,12 +84,6 @@ namespace DemoVenueRental.Extensions
 
             // 設定AddAntiforgery驗証
             services.AddAntiforgery();
-            //// 設定AddAntiforgery驗証
-            //services.AddAntiforgery(options =>
-            //{
-            //    options.FormFieldName = "AntiforgeryToken";
-            //    options.HeaderName = "X-CSRF-TOKEN";
-            //});
         }
 
         private static Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)

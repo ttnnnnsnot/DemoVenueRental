@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DemoVenueRental.Extensions;
+using DemoVenueRental.Global;
 using DemoVenueRental.Models;
 using System.Data;
 
@@ -7,7 +8,7 @@ namespace DemoVenueRental.Sql
 {
     public interface IDefData
     {
-        Task<List<SelectData>> GetSelectData(string typeName);
+        Task<ResultData<List<SelectType>>> GetData(string typeName);
     }
 
     public class DefData : IDefData
@@ -19,18 +20,33 @@ namespace DemoVenueRental.Sql
             _connection = connection;
         }
 
-        public async Task<List<SelectData>> GetSelectData(string typeName)
+        public async Task<ResultData<List<SelectType>>> GetData(string typeName)
         {
-            var sql = @"SELECT selectTypeId,name 
+            var result = new ResultData<List<SelectType>>();
+            try
+            {
+                var sql = @"SELECT selectTypeId,name 
                             FROM SelectType 
                         WHERE typeName = @typeName Order by sort";
 
-            var param = new
-            {
-                typeName = DapperExtension.ToNVarchar(typeName, 10)
-            };
+                var param = new
+                {
+                    typeName = typeName.ToVarchar(10),
+                };
 
-            return (await _connection.QueryAsync<SelectData>(sql, param)).ToList();
+                result.data = (await _connection.QueryAsync<SelectType>(sql, param)).ToList();
+
+                result.state = true;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.message = "取得資料失敗";
+                LoggerService.LogError(result.message, ex);
+                return result;
+            }
+
         }
     }
 }
